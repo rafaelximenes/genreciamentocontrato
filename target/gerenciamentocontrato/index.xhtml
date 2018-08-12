@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- WWW.DOTCOMAGENCIA.COM.BR -->
+<!-- Desenhado por: Felipe Garcia -->
+<!-- Programado por: Felipe Garcia -->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" class="cufon-active cufon-ready">
+<h:head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-117937668-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	
+	  gtag('config', 'UA-117937668-1');
+	</script>
+		
+	<link rel="icon" type="image/png" href="images/icon_lupa.png" />
+	<title>Olho no Diário</title>
+	<meta charset="utf-8" />
+	<meta name="" content="" />
+
+	<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+	<link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500"
+		rel="stylesheet" />
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<!-- Themify Icons -->
+	<link rel="stylesheet" href="css/themify-icons.css" />
+	<!-- Owl carousel -->
+	<link rel="stylesheet" href="css/owl.carousel.min.css" />
+	<!-- Main css -->
+	<link href="css/style.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/font-awesome.css" />
+
+	<!-- jQuery and Bootstrap -->
+	<!-- <script src="js/jquery-3.2.1.min.js"></script> -->
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<!-- Plugins JS -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- Custom JS -->
+	<script src="js/script.js"></script>
+	<h:outputScript library="primefaces" name="jquery/jquery.js" />
+
+
+
+	<style>
+.ui-inputfield {
+	border: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	float: none !important;
+	background-color: rgba(0, 0, 0, 0) !important;
+	background-position: center bottom, center calc(99%) !important;
+	background-repeat: no-repeat !important;
+	background-size: 0 2px, 100% 1px !important;
+	padding: 0 !important;
+	transition: background 0s ease-out 0s !important;
+	color: #565656 !important;
+	max-width: 100% !important;
+	width: 89% !important;
+	font-size: 14px !important;
+	line-height: 1.02857143 !important;
+	margin-left: 15px;
+}
+</style>
+
+</h:head>
+
+<h:body data-spy="scroll" data-target="#navbar" data-offset="30">
+	<h:form id="formularioCadastro">
+
+		<div class="nav-menu fixed-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<nav class="navbar navbar-dark navbar-expand-lg"> <p:commandLink
+							id="cliqueRegistre1" action="#{usuarioController.novoUsuario}" />
+						<p:commandLink id="cliqueLogin1"
+							action="#{usuarioLogin.novoLogin}" />
+						<button class="navbar-toggler" type="button"
+							data-toggle="collapse" data-target="#navbar"
+							aria-controls="navbar" aria-expanded="false"
+							aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbar">
+							<ul class="navbar-nav ml-auto">
+								<li class="nav-item"><a class="nav-link active"
+									href="#home">Início <span class="sr-only">(current)</span>
+								</a></li>
+								<li class="nav-item"><a class="nav-link" href="#oapp">SOBRE
+										O APP</a></li>
+								<li class="nav-item"><a 
+									class="btn btn-outline-light my-3 my-sm-0 ml-lg-3 invertido"
+									href="/pub/login.jsf">LOGIN</a></li>
+								<li class="nav-item"><a href="/pub/cadastrar.jsf"
+									class="btn btn-outline-light my-3 my-sm-0 ml-lg-3"
+									style="color: #fff !important; cursor: pointer;">REGISTRAR</a></li>
+							</ul>
+						</div>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<header class="bg-gradient" id="home">
+		<div class="container mt-5">
+			<h1 style="color: black">Cadastre e receba alertas nos diversos diários oficiais de forma fácil</h1>
+			<p class="tagline">Não perca tempo, conosco
+				você recebe alertas sobre os tópicos e palavras-chave de seu interesse.</p>
+		</div>
+
+
+
+		<div class="registre">
+
+			<li class="nav-item"><a href="/pub/cadastrar.jsf"
+				class="btn btn-outline-light my-3 my-sm-0 ml-lg-3 registrese"
+				style="color: #fff !important; cursor: pointer;">Registre-se
+					Agora</a></li>
+		</div>
+
+
+		<div class="mover-rover">
+			<a href="#oapp"><img src="images/splash_slider_mouse.gif" /></a>
+		</div>
+
+		</header>
+
+		<div id="oapp">
+
+
+			<div class="container">
+
+				<div class="section-title">
+					<h1 style="color: black; margin-top: 75px; margin-bottom: 80px;">O
+						que nós fazemos?</h1>
+				</div>
+
+
+				<div class="row">
+					<div class="col-12 col-lg-6">
+						<div class="card features">
+							<div class="card-body">
+								<div class="media">
+									<img src="images/cadastre.jpg" />
+									<div class="media-body">
+										<h4 class="card-title">Cadastre-se</h4>
+										<p class="card-text">Realize seu cadastro para usufruir todos os benefícios que somente o Olho no Diário oferece.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-lg-6">
+						<div class="card features">
+							<div class="card-body">
+								<div class="media">
+									<img src="images/pers.jpg" />
+									<div class="media-body">
+										<h4 class="card-title">Personalize seus Alertas</h4>
+										<p class="card-text">Com o Olho no Diário você personaliza seus alertas e palavras-chave a serem consultadas e ainda decide como deverá ser notificado.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-lg-6">
+						<div class="card features">
+							<div class="card-body">
+								<div class="media">
+									<img src="images/att.jpg" />
+									<div class="media-body">
+										<h4 class="card-title">Receba suas atualizações</h4>
+										<p class="card-text">Cadastre-se agora e fique por dentro de todos os benefícios proporcionados pelo APP.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-lg-6">
+						<div class="card features">
+							<div class="card-body">
+								<div class="media">
+									<img src="images/acesso.jpg" />
+									<div class="media-body">
+										<h4 class="card-title">Acesso fácil de qualquer aparelho</h4>
+										<p class="card-text">Para sua maior comodidade, em breve lançaremos a versão mobile do APP. Estará disponível em todas as plataformas.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="registre">
+					<a data-toggle="modal" data-target="#home-register"
+						onclick="PrimeFaces.ab({s:'formularioCadastro:cliqueRegistre1'});return false;"
+						class="btn btn-outline-light my-3 my-sm-0 ml-lg-3 registrese"
+						style="color: #fff !important; cursor: pointer;">Registre-se
+						Agora</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="section bg-gradient2">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-12 col-lg-6">
+						<div class="sobre-texto">
+
+							<h1
+								style="color: white; letter-spacing: -3px; margin-bottom: 0.5rem; line-height: 65px;">
+								Como o <b> Olho no Diário </b> Funciona?
+							</h1>
+							<h3 style="margin-right: 20px; line-height: 22px;">Após acessar a parte administrativa, você 
+							poderá cadastrar alertas de palavras-chave nos diversos diários oficiais. Com isso, quando encontrarmos qualquer referência a uma palavra-chave cadastrada,
+							iremos notificá-lo da forma como desejar. Ganhe tempo e diminua seu esforço nas consultas aos diversos diários oficiais. Deixe-nos informá-lo.
+							Aproveite esta oportunidade e use a ferramenta gratuitamente.</h3>
+							<div class="registre" style="margin-top: 20px;">
+								<a href="https://www.youtube.com/embed/C0DPdy98e4c?rel=0&amp;controls=0&amp;showinfo=0"
+									class="btn btn-outline-light my-3 my-sm-0 ml-lg-3 registrese"
+									style="margin-left: 0 !important; margin-top: 20px;">Dúvidas?</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-lg-6"
+						style="padding-right: 0; padding-left: 0;">
+						<div class="if">
+							<iframe width="545px" height="315px"
+								src="https://www.youtube.com/embed/C0DPdy98e4c?rel=0&amp;controls=0&amp;showinfo=0"
+								frameborder="0" allow="autoplay; encrypted-media"
+								allowfullscreen="true"></iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- // end .section -->
+
+		<!-- PARTE COM APP LOGOS
+   
+   		<div class="section bg-gradient">
+        <div class="container">
+            <div class="call-to-action">
+
+                <div class="box-icon"><span class="ti-mobile gradient-fill ti-3x"></span></div>
+                <h2>Download Anywhere</h2>
+                <p class="tagline">Available for all major mobile and desktop platforms. Rapidiously visualize optimal ROI rather than enterprise-wide methods of empowerment. </p>
+                <div class="my-4">
+
+                    <a href="#" class="btn btn-light"><img src="images/appleicon.png" alt="icon"> App Store</a>
+                    <a href="#" class="btn btn-light"><img src="images/playicon.png" alt="icon"> Google play</a>
+                </div>
+                <p class="text-primary"><small><i>*Works on iOS 10.0.5+, Android Kitkat and above. </i></small></p>
+            </div>
+        </div>
+
+    </div>
+     					FIM DO GRID -->
+
+		<div class="light-bg py-5" id="contact">
+			<div class="container">
+				<div class="row">
+					<div class="rodape">
+						<a href="https://facebook.com/olhonodiario"><img src="images/fb.png" /></a> 
+						<a href="https://twitter.com/olhonodiario"><img src="images/tw.png" /></a>
+						<a href="https://instagram.com/olhonodiario"><img src="images/it.png" /></a>
+					</div>
+
+					<div class="rodape-pos">
+						Acompanhe-nos nas redes sociais.
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<!-- // end .section -->
+		<footer class="my-5 text-center">
+		<div class="container">
+			<!-- Copyright removal is not prohibited! -->
+			<p class="mb-2">
+				<small>OLHO NO DIÁRIO APP - Todos os direitos reservados</small>
+			</p>
+		</div>
+		</footer>
+
+
+	</h:form>
+</h:body>
+
+</html>

@@ -1,0 +1,149 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/templateSemMenu.xhtml">
+
+	<ui:define name="title">Finalizar Cadastro</ui:define>
+
+	<ui:define name="viewname">Finalizar Cadastro</ui:define>
+
+	<ui:define name="head">
+		<style type="text/css">
+.ui-steps .ui-steps-item {
+	width: 50%;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroMinhaConta">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<p:outputPanel rendered="#{confirmaUsuarioController.tokenInvalido}">
+								<p:outputLabel value="Token Inválido."/>
+							</p:outputPanel>
+							
+							<h1>Meus Dados</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="atualiza">
+								<p:outputPanel rendered="#{confirmaUsuarioController.ativouCadastro}">
+									<br/>
+									<p:button outcome="/poseidon/login" value="Ir para Login" icon="fa fa-user" style="width:auto" styleClass="blue-btn" />
+									<br/>
+								</p:outputPanel>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{!confirmaUsuarioController.tokenInvalido}">
+								<p:outputPanel id="panelCadastro">
+									<div class="card">
+										<p:steps activeIndex="#{confirmaUsuarioController.indiceStep}"
+											readonly="false">
+											<p:menuitem value="Informações Básicas"
+												action="#{confirmaUsuarioController.atualizaStepParaInfoBasicas}"
+												update=":formCadastroMinhaConta:panelCadastro" />
+											<p:menuitem value="Endereço"
+												action="#{confirmaUsuarioController.atualizaStepParaInfoEndereco}"
+												update=":formCadastroMinhaConta:panelCadastro" />
+										</p:steps>
+									</div>
+	
+	
+									<p:outputPanel id="panelInfoBasicas"
+										rendered="#{confirmaUsuarioController.mostraInfoBasicas}">
+										<p:panelGrid columns="2"
+											columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+											layout="grid" styleClass="ui-panelgrid-blank form-group"
+											style="border:0px none; background-color:transparent;">
+	
+											<p:outputLabel for="nomeCompleto" value="Nome Completo" />
+											<p:inputText id="nomeCompleto"
+												value="#{confirmaUsuarioController.usuario.nome}" required="true" />
+											
+											<p:outputLabel for="email" value="Email" />
+											<p:inputText id="email" disabled="true"
+												value="#{confirmaUsuarioController.usuario.email}" required="true" />
+												
+											<p:outputLabel for="cpf" value="CPF" />
+											<p:inputMask id="cpf" mask="999.999.999-99" disabled="true"
+												value="#{confirmaUsuarioController.usuario.cpf}" required="true" />
+												
+											<p:outputLabel for="dtNascimento" value="Data de Nascimento" />
+											<p:calendar id="dtNascimento" mask="true" locale="pt" pattern="dd/MM/yyyy"
+												value="#{confirmaUsuarioController.usuario.dtNascimento}" required="true" />
+												
+											<p:outputLabel for="telefone" value="Telefone" />
+											<p:inputMask id="telefone" mask="(99) 9999-9999"
+												value="#{confirmaUsuarioController.usuario.telefone}"/>
+												
+											<p:outputLabel for="celular" value="Celular" />
+											<p:inputMask id="celular" mask="(99) 99999-9999"
+												value="#{confirmaUsuarioController.usuario.celular}" required="true" />
+												
+	
+										</p:panelGrid>
+										<br></br>
+										<div align="center">
+											<p:commandButton value="Avançar" process="@this, nomeCompleto, email, cpf, dtNascimento, telefone, celular"
+												action="#{confirmaUsuarioController.atualizaStepParaInfoEndereco}"
+												update=":formCadastroMinhaConta:panelCadastro, :formCadastroMinhaConta:messages"
+												style="width:auto" />
+										</div>
+									</p:outputPanel>
+	
+									<p:outputPanel id="panelEndereco"
+										rendered="#{!confirmaUsuarioController.mostraInfoBasicas}">
+										<p:panelGrid columns="2"
+											columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+											layout="grid" styleClass="ui-panelgrid-blank form-group"
+											style="border:0px none; background-color:transparent;">
+										
+											<p:outputLabel for="cep" value="Cep" />
+											<p:inputMask id="cep" mask="99999-999" value="#{confirmaUsuarioController.endereco.cep}" required="true">
+												<p:ajax event="blur" update=":formCadastroMinhaConta:panelCadastro, :formCadastroMinhaConta:messages" listener="#{confirmaUsuarioController.consultaEnderecoPorCep}"/>
+											</p:inputMask>
+											
+											<p:outputLabel for="logradouro" value="Logradouro" />
+											<p:inputText id="logradouro" value="#{confirmaUsuarioController.endereco.rua}" required="true"/>
+																					
+											<p:outputLabel for="numero" value="Número" />
+											<p:inputText id="numero" value="#{confirmaUsuarioController.endereco.numero}" />
+																					
+											<p:outputLabel for="complemento" value="Completo" />
+											<p:inputText id="complemento" value="#{confirmaUsuarioController.endereco.complemento}"/>	
+																				
+											<p:outputLabel for="bairro" value="Bairro" />
+											<p:inputText id="bairro" value="#{confirmaUsuarioController.endereco.bairro}" required="true"/>
+	
+	
+										</p:panelGrid>
+										<br></br>
+										<div align="center">
+											<p:commandButton value="Voltar" process="@this"
+												action="#{confirmaUsuarioController.atualizaStepParaInfoBasicas}"
+												update=":formCadastroMinhaConta:panelCadastro" disabled="#{confirmaUsuarioController.ativouCadastro}"
+												style="width:auto" />
+											<p:commandButton value="Finalizar Cadastro" process="@this, cep, logradouro, numero, complemento, bairro"
+												update=":formCadastroMinhaConta:panelCadastro, :formCadastroMinhaConta:messages, :formCadastroMinhaConta:atualiza"
+												style="width:auto" action="#{confirmaUsuarioController.atualizarDados}" disabled="#{confirmaUsuarioController.ativouCadastro}"/>
+										</div>
+									</p:outputPanel>
+	
+								</p:outputPanel>
+							</p:outputPanel>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

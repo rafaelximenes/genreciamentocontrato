@@ -1,0 +1,35 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pp="http://primefaces.org/poseidon">
+    
+    <h:form id="menuform"> 
+        <div class="layout-menu-container">
+            <div class="nano">
+                <div class="nano-content menu-scroll-content">
+                    <div class="search-input">
+                        <input type="text" placeholder="Pesquisar"/>
+                        <i class="fa fa-search"></i>
+                    </div>
+                    <p:outputPanel>
+	                    <pp:menu widgetVar="me">
+	                        <p:menuitem id="om_dashboard" value="Dashboard" icon="fa fa-fw fa-home" outcome="/poseidon/dashboard"/>
+	                        <p:submenu id="aom_themes" label="Ordem de Serviço" icon="fa fa-fw fa-bell">
+	                            <p:menuitem id="atheme1" value="Cadastrar" icon="fa fa-fw fa-plus-square" ajax="false" outcome="/poseidon/dashboard"/>
+	                            <p:menuitem id="atheme2" value="Histórico de OS" icon="fa fa-fw fa-history" ajax="false"  outcome="/poseidon/dashboard"/>
+	                        </p:submenu>
+	                       	<p:submenu id="parametros" label="Administração" icon="fa fa-fw fa-unlock-alt">
+	                            <p:menuitem id="cadastrarContrato" value="Cadastrar Contrato" icon="fa fa-fw fa-css3" ajax="false" outcome="/poseidon/dashboard" />
+	                            <p:menuitem id="cadastrarFornecedor" value="Cadastrar Fornecedor" icon="fa fa-fw fa-css3" ajax="false" outcome="/poseidon/fornecedor" />
+	                        </p:submenu>
+	                    </pp:menu>
+                    </p:outputPanel>
+                    
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

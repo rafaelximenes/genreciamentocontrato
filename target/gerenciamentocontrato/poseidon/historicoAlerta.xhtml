@@ -1,0 +1,232 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Histórico de Alertas</ui:define>
+
+	<ui:define name="viewname">Alertas > Histórico de Alertas</ui:define>
+
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroHistoricoAlerta">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Histórico de notificações</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="mes" value="Mês" />
+									<p:selectOneMenu id="mes"
+										value="#{historicoAlertaController.mesFiltro}">
+										<f:selectItem itemLabel="Janeiro" itemValue="Janeiro" />
+										<f:selectItem itemLabel="Fevereiro" itemValue="Fevereiro" />
+										<f:selectItem itemLabel="Março" itemValue="Marco" />
+										<f:selectItem itemLabel="Abril" itemValue="Abril" />
+										<f:selectItem itemLabel="Maio" itemValue="Maio" />
+										<f:selectItem itemLabel="Junho" itemValue="Junho" />
+										<f:selectItem itemLabel="Julho" itemValue="Julho" />
+										<f:selectItem itemLabel="Agosto" itemValue="Agosto" />
+										<f:selectItem itemLabel="Setembro" itemValue="Setembro" />
+										<f:selectItem itemLabel="Outubro" itemValue="Outubro" />
+										<f:selectItem itemLabel="Novembro" itemValue="Novembro" />
+										<f:selectItem itemLabel="Dezembro" itemValue="Dezembro" />
+									</p:selectOneMenu>
+									<p:outputLabel for="ano" value="Ano" />
+									<p:selectOneMenu id="ano"
+										value="#{historicoAlertaController.anoFiltro}">
+										<f:selectItem itemLabel="2018" itemValue="2018" />
+									</p:selectOneMenu>
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton id="botaoPesauisar" value="Pesquisar"
+										action="#{historicoAlertaController.pesquisar}"
+										update=":formCadastroHistoricoAlerta" style="width:auto" />
+									<p:commandButton id="botaoLimpar" value="Limpar Dados"
+										action="#{historicoAlertaController.limparDados}"
+										update=":formCadastroHistoricoAlerta" style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+						</div>
+
+
+
+
+						<p:dataGrid var="data"
+							value="#{historicoAlertaController.listPrimeiroFiltro}"
+							columns="6" layout="grid" id="listPrimeiroFiltro">
+							<div align="center">
+								<f:facet name="header">
+					            Histórico de Alertas do Período Selecionado.
+					        </f:facet>
+
+								<p:panel header="#{data.data}" style="text-align:center">
+									<h:panelGrid columns="1" style="width:100%">
+										<p:outputPanel rendered="#{!data.negrito}">
+											<h:outputText
+												value="#{data.qtdAlertasEncontrados} alerta(s)." />
+										</p:outputPanel>
+										<p:outputPanel rendered="#{data.negrito}">
+											<h:outputText style="font-weight: bold"
+												value="#{data.qtdAlertasEncontrados} alerta(s)." />
+										</p:outputPanel>
+
+										<p:commandLink title="Detalhar Alertas"
+											update=":formCadastroHistoricoAlerta:renderSegundoFiltro, :formCadastroHistoricoAlerta:renderTerceiroFiltro, :formCadastroHistoricoAlerta:renderQuartoFiltro">
+											<h:outputText styleClass="ui-icon ui-icon-search"
+												style="margin:0 auto;" />
+											<f:setPropertyActionListener value="#{data}"
+												target="#{historicoAlertaController.dataSelected}" />
+										</p:commandLink>
+									</h:panelGrid>
+								</p:panel>
+							</div>
+
+						</p:dataGrid>
+
+
+					</div>
+
+
+					<p:outputPanel id="renderSegundoFiltro">
+						<div class="card card-w-title">
+
+							<p:outputPanel
+								rendered="#{historicoAlertaController.clicouCalendario}">
+								<h1>
+									Palavras-chaves encontradas no diário no dia
+									<p:outputLabel
+										value="#{historicoAlertaController.dataSelected.data}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:outputLabel>
+								</h1>
+								<p:outputPanel id="panelTable">
+									<p:dataTable var="palavra"
+										value="#{historicoAlertaController.listSegundoFiltro}"
+										reflow="true" selectionMode="single"
+										selection="#{historicoAlertaController.palavraChaveSelected}"
+										emptyMessage="Nenhuma alerta encontrado nesse dia"
+										rowKey="#{palavra.historicoAlerta.alerta.palavraChave}"
+										paginator="true" rows="10">
+										<p:ajax event="rowSelect"
+											listener="#{historicoAlertaController.onRowSelectSegundoFiltro}"
+											update=":formCadastroHistoricoAlerta:renderTerceiroFiltro, :formCadastroHistoricoAlerta:renderQuartoFiltro" />
+										<p:ajax event="rowUnselect"
+											listener="#{historicoAlertaController.onRowUnselectSegundoFiltro}"
+											update=":formCadastroHistoricoAlerta:renderTerceiroFiltro, :formCadastroHistoricoAlerta:renderQuartoFiltro" />
+										<f:facet name="header">
+                                Selecione a palavra-chave para detalhar as notificações encontradas.
+                            </f:facet>
+
+										<p:column width="25%" headerText="Palavra-Chave"
+											sortBy="#{palavra.historicoAlerta.alerta.palavraChave}">
+											<h:outputText
+												value="#{palavra.historicoAlerta.alerta.palavraChave}" />
+										</p:column>
+
+
+
+									</p:dataTable>
+
+
+								</p:outputPanel>
+							</p:outputPanel>
+						</div>
+					</p:outputPanel>
+
+
+					<p:outputPanel id="renderTerceiroFiltro">
+						<div class="card card-w-title">
+
+							<p:outputPanel
+								rendered="#{historicoAlertaController.mostraFiltro3}">
+								<h1>
+									Diários que possuem a notificação
+									<p:outputLabel
+										value="#{historicoAlertaController.palavraChaveSelected.historicoAlerta.alerta.palavraChave}" />
+								</h1>
+								<p:outputPanel id="panelTable3">
+									<p:dataTable var="diario"
+										value="#{historicoAlertaController.listTerceiroFiltro}"
+										reflow="true" selectionMode="single"
+										selection="#{historicoAlertaController.diarioSelected}"
+										emptyMessage="Nenhuma alerta encontrado nesse dia"
+										rowKey="#{diario.historicoAlerta.diario.descricao}"
+										paginator="true" rows="10">
+										<p:ajax event="rowSelect"
+											listener="#{historicoAlertaController.onRowSelectTerceiroFiltro}"
+											update=":formCadastroHistoricoAlerta:renderQuartoFiltro" />
+										<p:ajax event="rowUnselect"
+											listener="#{historicoAlertaController.onRowUnselectTerceiroFiltro}"
+											update=":formCadastroHistoricoAlerta:renderQuartoFiltro" />  />
+										<f:facet name="header">
+                                Selecione o diário para detalhar as notificações encontradas.
+                            </f:facet>
+
+										<p:column width="25%" headerText="Díario Oficial"
+											sortBy="#{diario.historicoAlerta.diario.descricao}">
+											<h:outputText
+												value="#{diario.historicoAlerta.diario.descricao}" />
+										</p:column>
+
+
+
+									</p:dataTable>
+
+
+								</p:outputPanel>
+							</p:outputPanel>
+						</div>
+					</p:outputPanel>
+
+
+					<p:outputPanel id="renderQuartoFiltro">
+						<div class="card card-w-title">
+
+							<p:outputPanel
+								rendered="#{historicoAlertaController.mostraFiltro4}">
+								<h1>Links</h1>
+								<p:outputPanel id="panelTable4">
+									<p:dataTable var="link"
+										value="#{historicoAlertaController.listLink}" reflow="true"
+										paginator="true" rows="10">
+										<f:facet name="header">
+			                                Links para o Diário.
+			                            </f:facet>
+
+										<p:column width="100%" headerText="Link" sortBy="#{link.link}">
+											<div align="center">
+												<p:outputLabel value="#{link.link}" />
+											</div>
+										</p:column>
+
+
+
+									</p:dataTable>
+
+
+								</p:outputPanel>
+							</p:outputPanel>
+						</div>
+					</p:outputPanel>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

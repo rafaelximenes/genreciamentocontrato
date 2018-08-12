@@ -1,0 +1,169 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Cadastrar Alertas</ui:define>
+
+	<ui:define name="viewname">Alerta > Cadastrar Alertas</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroAlerta">
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastro</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+							<p:panelGrid columns="2"
+								columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+								layout="grid" styleClass="ui-panelgrid-blank form-group"
+								style="border:0px none; background-color:transparent;">
+
+								<p:outputLabel for="palavra" value="Palavra-Chave" />
+								<p:inputText id="palavra" value="#{cadastroAlertaController.alerta.palavraChave}" required="true"/>
+
+								<p:outputLabel for="email" value="Email de Notificação" />
+								<p:inputText id="email" disabled="true" value="#{cadastroAlertaController.alerta.emailNotificacao}" required="true"/>
+
+								<p:outputLabel for="validade" value="Validade do Alerta" />
+								<p:calendar id="validade" mask="true" value="#{cadastroAlertaController.alerta.validade}" locale="pt" pattern="dd/MM/yyyy" required="true">
+									<p:ajax event="dateSelect" listener="#{cadastroAlertaController.atualizaValor}" update=":formCadastroAlerta:validade, :formCadastroAlerta:preco" />
+									<p:ajax event="change" listener="#{cadastroAlertaController.atualizaValor}" update=":formCadastroAlerta:validade, :formCadastroAlerta:preco" />
+								</p:calendar>
+
+								<p:outputLabel for="diarios" value="Diários Oficiais" />
+								<p:selectManyMenu id="diarios" filter="true" scrollHeight="170" required="true"
+											value="#{cadastroAlertaController.diarioListSelected}"
+											converter="themeConverter"
+											filterMatchMode="contains" showCheckbox="true"> 
+									<p:ajax listener="#{cadastroAlertaController.atualizaValor}" update=":formCadastroAlerta:preco" />
+									<f:selectItems value="#{cadastroAlertaController.diarioList}"
+										var="theme" itemLabel="#{theme.descricao}"
+										itemValue="#{theme}" />
+								</p:selectManyMenu>
+								
+									<p:outputLabel for="preco" value="Preço*" />
+									<p:outputLabel id="preco" value="R$ #{cadastroAlertaController.alerta.valorFormatado}" />
+									
+								<p:outputLabel value=""/>
+
+							</p:panelGrid>
+							</p:outputPanel>
+							
+							<div align="center">
+								<p:commandButton value="Cadastrar Alerta" action="#{cadastroAlertaController.cadastrarAlerta}" update=":formCadastroAlerta:panelCadastro, :formCadastroAlerta:messages, :formCadastroAlerta:panelTable" style="width:auto"/>
+								<p:commandButton value="Limpar Dados" action="#{cadastroAlertaController.limparDados}" process="@this" update=":formCadastroAlerta:panelCadastro, :formCadastroAlerta:messages" style="width:auto"/>
+							</div>
+							<br></br>
+							<p:outputLabel for="preco" style="font-size:10px" value="* O preço é calculado automaticamente logo após selecionar o diário e a validade do alerta. Cálculo: preço = Qtd. mês x Qtd. alerta x R$2,50." />
+						</div>
+						
+
+						<div class="card card-w-title">
+							<h1>Alertas Cadastrados</h1>
+							<p:messages id="messagesDataTable" showDetail="true" closable="true" />
+							<p:outputPanel id="panelTable">
+							<p:dataTable var="alerta" value="#{cadastroAlertaController.alertaList}" reflow="true"
+                        	emptyMessage="Nenhum Alerta Cadastrado" rowKey="#{alerta.id}" paginator="true" rows="10">
+                            <f:facet name="header">
+                                Alertas Cadastrados
+                            </f:facet>
+                            <p:column width="25%" headerText="Palavra-Chave" sortBy="#{alerta.palavraChave}">
+                                <h:outputText value="#{alerta.palavraChave}" />
+                            </p:column>
+                            
+                            <p:column width="25%" headerText="E-mail de Notificação" sortBy="#{alerta.emailNotificacao}">
+                                <h:outputText value="#{alerta.emailNotificacao}" />
+                            </p:column>
+
+                            <p:column width="15%" headerText="Validade" sortBy="#{alerta.validade}">
+                            	<div align="center">
+	                                <h:outputText value="#{alerta.validade}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</div>
+                            </p:column>
+
+                            
+
+                            <p:column width="15%" headerText="Valor" sortBy="#{alerta.valor}">
+	                            <div align="center">
+	                                <h:outputText value="R$ #{alerta.valor}" />
+	                            </div>
+                            </p:column>
+                            
+                            
+                            <p:column width="10%" headerText="Diários">
+	                            <div align="center">
+	                            	<p:commandButton process="@this" update=":formCadastroAlerta:alertaDetail" oncomplete="PF('alertaDialog2').show()" 
+	                            		title="Ver Detalhes" icon="ui-icon-search" style="margin:24px 24px 0 0">
+	                                    <f:setPropertyActionListener value="#{alerta}" target="#{cadastroAlertaController.alertaSelected}" />
+	                                </p:commandButton>
+	                            </div>
+                            </p:column>
+                            
+                            <p:column width="10%" headerText="Excluir">
+                            	<div align="center">
+	                            	<p:commandButton process="@this" update=":formCadastroAlerta:excluirAlertaDetail" oncomplete="PF('excluirAlertaDialog2').show()" 
+	                            		title="Delete" icon="fa fa-trash" style="margin:24px 24px 0 0">
+	                                    <f:setPropertyActionListener value="#{alerta}" target="#{cadastroAlertaController.alertaSelected}" />
+	                                </p:commandButton>
+                                </div>
+                            </p:column>
+                            
+                        </p:dataTable>
+                        
+                        
+                        <p:dialog width="30%" header="Diários Oficiais" widgetVar="alertaDialog2" responsive="true" modal="true" showEffect="blind" hideEffect="explode" resizable="false">
+                            <p:outputPanel id="alertaDetail" style="text-align:center;">
+
+								<h:panelGrid columns="2">
+									<p:outputLabel for="diariosDetalhes" value="Diários Oficiais" />
+									<p:selectManyMenu id="diariosDetalhes" scrollHeight="170" 
+												value="#{cadastroAlertaController.alerta.diarioList}"
+												converter="themeConverter"> 
+										<f:selectItems value="#{cadastroAlertaController.diarioList}"
+											var="theme" itemLabel="#{theme.descricao}"
+											itemValue="#{theme}" />
+									</p:selectManyMenu>
+								</h:panelGrid>
+
+                            </p:outputPanel>
+                        </p:dialog>
+                        
+                        
+                        <p:dialog width="40%" header="Excluir Alerta" widgetVar="excluirAlertaDialog2" responsive="true" modal="true" showEffect="blind" hideEffect="explode" resizable="false">
+                            <p:outputPanel id="excluirAlertaDetail" style="text-align:center;">
+								<h:panelGrid>
+									<p:outputLabel
+										value="Deseja realmente excluir o alerta selecionado? Será retornado ao seu saldo R$ #{cadastroAlertaController.estorno}." />
+								</h:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Sim" process="@this" action="#{cadastroAlertaController.excluirAlerta}" update=":formCadastroAlerta:messagesDataTable, :formCadastroAlerta:panelTable" style="width:auto" oncomplete="PF('excluirAlertaDialog2').hide()"/>
+									<p:commandButton value="Não" immediate="true" process="@this" oncomplete="PF('excluirAlertaDialog2').hide()" style="width:auto" />
+								</div>
+								
+
+                            </p:outputPanel>
+                        </p:dialog>
+                        
+                        
+                        
+                        </p:outputPanel>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Baixar Diário Oficial</ui:define>
+
+	<ui:define name="viewname">Baixar Diário Oficial</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroBaixar">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Baixar Diário</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+									<p:panelGrid columns="2"
+										columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+										layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+										
+										<p:outputLabel for="data" value="Data" />
+										<p:calendar id="data" mask="true" locale="pt" pattern="dd/MM/yyyy"
+											value="#{baixarDiarioController.data}" required="true" >
+											<p:ajax event="dateSelect" listener="#{baixarDiarioController.baixar}"  update=":formCadastroBaixar:messages, :formCadastroBaixar:botaoDownload" />
+											<p:ajax event="change" listener="#{baixarDiarioController.baixar}" update=":formCadastroBaixar:messages, :formCadastroBaixar:botaoDownload" />
+										</p:calendar>
+										
+										<p:outputLabel for="diario" value="Diário Oficial" />
+										<p:selectOneMenu id="diario" value="#{baixarDiarioController.diario}" converter="diarioConverter" style="margin-bottom:10px;">
+											<f:selectItems var="diario" value="#{baixarDiarioController.diarioList}" itemLabel="#{diario.id} - #{diario.descricao}" itemValue="#{diario}"/>
+											<p:ajax event="change" listener="#{baixarDiarioController.baixar}"  update=":formCadastroBaixar:messages, :formCadastroBaixar:botaoDownload"/>
+				                        </p:selectOneMenu>
+										
+									</p:panelGrid>
+									<br></br>
+									<div align="center">
+										<p:commandButton id="botaoDownload" value="Download" disabled="#{!baixarDiarioController.mostraBotaoDownload}" action="#{baixarDiarioController.baixar}" onclick="PrimeFaces.monitorDownload(start, stop);" style="width:auto" ajax="false" icon="ui-icon-arrowthick-1-s" update=":formCadastroBaixar:panelCadastro, :formCadastroBaixar:messages">
+									        <p:fileDownload value="#{baixarDiarioController.file}"/>
+									    </p:commandButton>
+									</div>
+								</p:outputPanel>
+
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

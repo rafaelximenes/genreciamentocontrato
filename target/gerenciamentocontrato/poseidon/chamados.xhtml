@@ -1,0 +1,140 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Chamados</ui:define>
+
+	<ui:define name="viewname">Administrador > Chamados</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroSuporte">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Chamados Registrados</h1>
+							<p:outputPanel id="panelCadastro">
+
+									<p:panelGrid columns="2"
+										columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+										layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+
+										<p:outputLabel for="tipoChamado" value="Categoria" />
+										<p:selectOneMenu id="tipoChamado" value="#{chamadosController.categoriaFiltro}">
+											<f:selectItem itemValue="T" itemLabel="Todos"/>
+											<f:selectItem itemValue="A" itemLabel="Abertos"/>
+											<f:selectItem itemValue="F" itemLabel="Fechados"/>
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="email" value="E-mail" />
+										<p:inputText id="email" value="#{chamadosController.suporte.email}"/>
+										
+									</p:panelGrid>
+									<br></br>
+									<div align="center">
+										<p:commandButton value="Pesquisar"
+											action="#{chamadosController.pesquisar}"
+											update=":formCadastroSuporte:panelTable"
+											style="width:auto" />
+										<p:commandButton value="Limpar Dados"
+											action="#{chamadosController.limparDados}" process="@this"
+											update=":formCadastroSuporte:panelCadastro, :formCadastroSuporte:panelTable"
+											style="width:auto" />
+									</div>
+								</p:outputPanel>
+
+
+						</div>
+						
+						
+						<div class="card card-w-title">
+							<h1>Lista de Chamados</h1>
+							<p:outputPanel id="panelTable">
+							<p:dataTable var="chamado" value="#{chamadosController.list}" reflow="true"
+                        	emptyMessage="Nenhum Chamado Cadastrado" rowKey="#{chamado.id}" paginator="true" rows="10">
+                            <f:facet name="header">
+                                Alertas Cadastrados
+                            </f:facet>
+                            <p:column width="15%" headerText="Nome" sortBy="#{chamado.nome}">
+                                <h:outputText value="#{chamado.nome}" />
+                            </p:column>
+                            
+                            <p:column width="15%" headerText="E-mail" sortBy="#{chamado.email}">
+                                <h:outputText value="#{chamado.email}" />
+                            </p:column>
+                            
+                            <p:column width="10%" headerText="Status" sortBy="#{chamado.atendido}">
+                            	<div align="center">
+                            	<p:outputPanel rendered="#{!chamado.chamadoAberto}">
+                                	<h:outputText value="Fechado"/>
+                                </p:outputPanel>
+                                <p:outputPanel rendered="#{chamado.chamadoAberto}">
+                                	<h:outputText value="Aberto"/>
+                                </p:outputPanel>
+                                </div>
+                            </p:column>
+                            
+                            <p:column width="10%" headerText="Assunto" sortBy="#{chamado.assunto}">
+                                <h:outputText value="#{chamado.assunto}" />
+                            </p:column>
+                            
+                            <p:column width="40%" headerText="Mensagem" sortBy="#{chamado.mensagem}">
+                                <h:outputText value="#{chamado.mensagem}" />
+                            </p:column>
+                            
+
+                            <p:column width="10%" headerText="Responder">
+	                            <div align="center">
+	                            	<p:outputPanel rendered="#{chamado.chamadoAberto}">
+		                            	<p:commandButton process="@this" update=":formCadastroSuporte:chamadoDetail" oncomplete="PF('chamadoDialog').show()"
+		                            		title="Responder" icon="fa fa-flag" style="margin:24px 24px 0 0">
+		                            		<f:setPropertyActionListener value="#{chamado}" target="#{chamadosController.suporteSelected}" />
+		                                </p:commandButton>
+	                                </p:outputPanel>
+	                            </div>
+                            </p:column>
+                            
+                        </p:dataTable>
+                        
+                        <p:dialog width="60%" header="Responder Chamado" widgetVar="chamadoDialog" responsive="true" modal="true" showEffect="blind" hideEffect="explode" resizable="false">
+                            <p:outputPanel id="chamadoDetail" style="text-align:center;">
+
+								<h:panelGrid columns="2">
+									<p:outputLabel for="diariosDetalhes" value="Resposta" />
+									<p:textEditor id="diariosDetalhes" widgetVar="editor1" value="#{chamadosController.suporteSelected.resposta}" height="180" style="margin-bottom:10px"/>
+								</h:panelGrid>
+								
+								<div align="center">
+										<p:commandButton value="Responder"
+											action="#{chamadosController.responder}" 
+											update=":formCadastroSuporte:panelTable"
+											style="width:auto" />
+										<p:commandButton value="Fechar"
+											process="@this" oncomplete="PF('chamadoDialog').hide()"
+											update=":formCadastroSuporte:panelCadastro, :formCadastroSuporte:panelTable"
+											style="width:auto" />
+									</div>
+
+                            </p:outputPanel>
+                        </p:dialog>
+                        
+                        
+                        </p:outputPanel>
+						</div>
+						
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

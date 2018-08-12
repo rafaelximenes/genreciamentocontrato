@@ -1,0 +1,362 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Adicionar Saldo</ui:define>
+
+	<ui:define name="viewname">Adicionar Saldo</ui:define>
+
+	<ui:define name="head">
+		<style type="text/css">
+		.ui-steps .ui-steps-item {
+			width: 50%;
+		}
+		</style>
+		<script
+			src="https://stc.pagseguro.uol.com.br/pagseguro/api/v2/checkout/pagseguro.directpayment.js" />
+
+
+		<script>
+			function retornaBandeiraCartao() {
+				var id = document.getElementById('formCadastroPagamento:idEscondido').value;
+				var numberCard = document.getElementById('formCadastroPagamento:nCartao').value;
+				if(numberCard.length==19) {
+					PagSeguroDirectPayment.setSessionId(id);
+		    		var hashSeller = PagSeguroDirectPayment.getSenderHash();
+						PagSeguroDirectPayment.getBrand({
+						    cardBin: numberCard.replace('.', '').substring(0, 6),
+						    success: function(response) {
+						    	if(response.brand.name=="mastercard") {
+						    		document.getElementById('formCadastroPagamento:mastercard').style.display = "inline";
+						    		document.getElementById('formCadastroPagamento:visa').style.display = "none";
+						    		document.getElementById('formCadastroPagamento:amex').style.display = "none";
+						    		
+						    	}
+						    	if(response.brand.name=="visa") {
+						    		document.getElementById('formCadastroPagamento:visa').style.display = "inline";
+						    		document.getElementById('formCadastroPagamento:mastercard').style.display = "none";
+						    		document.getElementById('formCadastroPagamento:amex').style.display = "none";
+						    	}
+						    	if(response.brand.name=="amex") {
+						    		document.getElementById('formCadastroPagamento:amex').style.display = "inline";
+						    		document.getElementById('formCadastroPagamento:mastercard').style.display = "none";
+						    		document.getElementById('formCadastroPagamento:visa').style.display = "none";
+						    	}
+						    	document.getElementById('formCadastroPagamento:brandEscondido').value = response.brand.name;
+						    },
+						    error: function(response) {
+						    	document.getElementById('mastercard').style.display = "none";
+					    		document.getElementById('visa').style.display = "none";
+					    		document.getElementById('amex').style.display = "none";
+						    	document.getElementById('formCadastroPagamento:nCartao').value=null;
+						    	alert('O número do cartão informado está inválido.')
+						    },
+						    complete: function(response) {
+						    }
+					});
+				}		
+			}
+		
+		</script>
+
+
+		<script type="application/javascript">
+		
+    	var global;
+    	function processarPagamentoJavaScript(){
+    		var processa = true;
+    		if(document.getElementById('formCadastroPagamento:nCartao').value=="") {
+    			processa = false;
+    		}
+			if(document.getElementById('formCadastroPagamento:nome').value=="") {
+				processa = false;
+    		}
+			if(document.getElementById('formCadastroPagamento:validade').value=="") {
+				processa = false;
+    		}
+			if(document.getElementById('formCadastroPagamento:ccv').value=="") {
+				processa = false;
+    		}
+			if(document.getElementById('formCadastroPagamento:valor').value=="") {
+				processa = false;
+    		}
+			if(processa) {
+	    		var cvvSize, expirable, international, name;
+	    		var tokenCreditCard;
+	    		var id = document.getElementById('formCadastroPagamento:idEscondido').value;
+	    		PagSeguroDirectPayment.setSessionId(id);
+	    		var hashSeller = PagSeguroDirectPayment.getSenderHash();
+	    		document.getElementById('formCadastroPagamento:hashEscondido').value = hashSeller;
+	    		
+	    		
+	    		var param = {
+	        		    cardNumber: document.getElementById('formCadastroPagamento:nCartao').value.replace('.', '').replace('.', '').replace('.', ''),
+	        		    cvv: document.getElementById('formCadastroPagamento:ccv').value,
+	        		    expirationMonth: document.getElementById('formCadastroPagamento:validade').value.substring(0, 2),
+	        		    expirationYear: document.getElementById('formCadastroPagamento:validade').value.substring(3),
+	        		    brand: global,
+	        		    success: function(response) {
+	        		        //token gerado, esse deve ser usado na chamada da API do Checkout Transparente
+	        	    		document.getElementById('formCadastroPagamento:tokenEscondido').value = response.card.token;
+	        	    		document.getElementById('formCadastroPagamento:processaPagamento').click();
+	        		    },
+	        		    error: function(response) {
+	        		    	alert('Erro no Processamento! Favor validar as informações preenchidas.');
+	        		    },
+	        		    complete: function(response) {
+	        		        //tratamento comum para todas chamadas
+	        		    }
+	        		};
+	    		
+	    		
+	    		PagSeguroDirectPayment.createCardToken(param);
+    		
+			}
+    	}
+	
+	</script>
+
+	</ui:define>
+
+
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroPagamento">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Adicionar Saldo</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="nCartao" value="Número do Cartão" />
+									<h:panelGroup>
+										<p:inputMask id="nCartao" mask="9999.9999.9999.9999"
+											required="true" onblur="retornaBandeiraCartao()"
+											value="#{paymentController.cartaoCredito.cartao}">
+										</p:inputMask>
+											<p:graphicImage id="visa" name="payment/visa02.png" alt="Visa" title="Visa" style="display: none;"/>
+											<p:graphicImage id="amex" name="payment/americanexpress.png" alt="Amex" title="American Express" style="display: none;"/>
+											<p:graphicImage id="mastercard" name="payment/mastercard.png" alt="MasterCard" title="Mastercard" style="display: none;"/>
+									</h:panelGroup>
+
+									<p:outputLabel for="nome" value="Nome do Titular" />
+									<p:inputText id="nome" placeholder="Como escrito no cartão"
+										required="true"
+										value="#{paymentController.cartaoCredito.nome}" />
+
+									<p:outputLabel for="validade" value="Validade" />
+									<p:inputMask id="validade" mask="99/9999" required="true"
+										value="#{paymentController.cartaoCredito.validade}" />
+
+									<p:outputLabel for="ccv" value="Código de Segurança(CVC/CVV)" />
+									<p:inputText id="ccv" required="true"
+										value="#{paymentController.cartaoCredito.ccv}" />
+
+									<p:outputLabel for="valor" value="Valor a adicionar ao saldo" />
+									<p:inputText id="valor" required="true"
+										value="#{paymentController.cartaoCredito.valor}" />
+										
+									<p:outputLabel for="oneBtn"  value="O titular do cartão é o titular da conta?" />
+	                                <p:selectOneButton id="oneBtn" value="#{paymentController.proprietarioCartaoIgualConta}">
+	                                    <f:selectItem itemLabel="Sim" itemValue="S" />
+	                                    <f:selectItem itemLabel="Não" itemValue="N" />
+	                                    <p:ajax event="change" process="@this" listener="#{paymentController.novoTitular}" update=":formCadastroPagamento:panelDiferenteTitular, :formCadastroPagamento:botaoProcessar"/>
+	                                </p:selectOneButton>
+	                                
+								</p:panelGrid>
+								
+								<br></br><br></br>
+								<p:outputPanel id="panelDiferenteTitular">
+									<p:outputLabel rendered="#{paymentController.liberaPreenchimentoDadosTitular}">
+										<div class="card">
+											<p:steps activeIndex="#{paymentController.indiceStep}"
+												readonly="false">
+												<p:menuitem value="Informações Básicas"
+													action="#{paymentController.atualizaStepParaInfoBasicas}"
+													update=":formCadastroPagamento:panelCadastro" />
+												<p:menuitem value="Endereço"
+													action="#{paymentController.atualizaStepParaInfoEndereco}"
+													update=":formCadastroPagamento:panelCadastro" />
+											</p:steps>
+										</div>
+										
+										
+										<p:outputPanel id="panelInfoBasicas"
+											rendered="#{paymentController.mostraInfoBasicas}">
+											<p:panelGrid columns="2"
+												columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+												layout="grid" styleClass="ui-panelgrid-blank form-group"
+												style="border:0px none; background-color:transparent;">
+		
+												<p:outputLabel for="nomeCompleto" value="Nome Completo" />
+												<p:inputText id="nomeCompleto"
+													value="#{paymentController.usuarioNovoTitular.nome}" required="true" />
+												
+												<p:outputLabel for="cpf" value="CPF" />
+												<p:inputMask id="cpf" mask="999.999.999-99"
+													value="#{paymentController.usuarioNovoTitular.cpf}" required="true" />
+													
+												<p:outputLabel for="dtNascimento" value="Data de Nascimento" />
+												<p:calendar id="dtNascimento" mask="true" locale="pt" pattern="dd/MM/yyyy"
+													value="#{paymentController.usuarioNovoTitular.dtNascimento}" required="true" />
+													
+		
+											</p:panelGrid>
+											<br></br>
+											<div align="center">
+												<p:commandButton value="Avançar" process="@this, nomeCompleto, cpf, dtNascimento"
+													action="#{paymentController.atualizaStepParaInfoEndereco}"
+													update=":formCadastroPagamento:panelDiferenteTitular, :formCadastroPagamento:messages, :formCadastroPagamento:botaoProcessar"
+													style="width:auto" />
+											</div>
+										</p:outputPanel>
+		
+										<p:outputPanel id="panelEndereco"
+											rendered="#{!paymentController.mostraInfoBasicas}">
+											<p:panelGrid columns="2"
+												columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+												layout="grid" styleClass="ui-panelgrid-blank form-group"
+												style="border:0px none; background-color:transparent;">
+											
+												<p:outputLabel for="cep" value="Cep" />
+												<p:inputMask id="cep" mask="99999-999" value="#{paymentController.enderecoNovoTitular.cep}" required="true">
+													<p:ajax event="blur" update=":formCadastroPagamento:panelDiferenteTitular, :formCadastroPagamento:messages" listener="#{paymentController.consultaEnderecoPorCep}"/>
+												</p:inputMask>
+												
+												<p:outputLabel for="logradouro" value="Logradouro" />
+												<p:inputText id="logradouro" value="#{paymentController.enderecoNovoTitular.rua}" required="true"/>
+																						
+												<p:outputLabel for="numero" value="Número" />
+												<p:inputText id="numero" value="#{paymentController.enderecoNovoTitular.numero}" />
+																						
+												<p:outputLabel for="complemento" value="Completo" />
+												<p:inputText id="complemento" value="#{paymentController.enderecoNovoTitular.complemento}"/>	
+																					
+												<p:outputLabel for="bairro" value="Bairro" />
+												<p:inputText id="bairro" value="#{paymentController.enderecoNovoTitular.bairro}" required="true"/>
+		
+		
+											</p:panelGrid>
+											<br></br>
+											<div align="center">
+												<p:commandButton value="Voltar" process="@this"
+													action="#{paymentController.atualizaStepParaInfoBasicas}"
+													update=":formCadastroPagamento:panelDiferenteTitular"
+													style="width:auto" />
+											</div>
+										</p:outputPanel>
+												
+										
+										
+									</p:outputLabel>
+								</p:outputPanel>
+								
+								
+								<br></br><br></br><br></br>
+								<div align="center">
+									<p:commandButton id="botaoProcessar" value="Processar Pagamento"
+										action="#{paymentController.enviar}" disabled="#{paymentController.buttonDisabled}"
+										update=":formCadastroPagamento:panelCadastro, :formCadastroPagamento:messages"
+										style="width:auto" >
+										<p:ajax oncomplete="processarPagamentoJavaScript()"/>
+									</p:commandButton>
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{paymentController.limparDados}"
+										update=":formCadastroPagamento"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+						
+						
+						
+						<div class="card card-w-title">
+							<h1>Histórico de Pagamentos</h1>
+							<p:messages id="messagesDataTable" showDetail="true" closable="true" />
+							<p:outputPanel id="panelTable">
+							<p:dataTable var="pagamento" value="#{paymentController.listPagamentos}" reflow="true"
+                        	emptyMessage="Nenhum Pagamento Realizado" rowKey="#{pagamento.id}" paginator="true" rows="10">
+                            <f:facet name="header">
+                                Pagamentos
+                            </f:facet>
+                            <p:column width="15%" headerText="Hora da Solicitação" sortBy="#{pagamento.horaAutorizacao}">
+                            	<div align="center">
+	                                <h:outputText value="#{pagamento.horaAutorizacao}"/>
+								</div>
+                            </p:column>
+                            
+                            <p:column width="15%" headerText="Hora da Aprovação" sortBy="#{pagamento.horaAutorizacao}">
+                                <div align="center">
+	                                <h:outputText value="#{pagamento.horaAutorizacao}"/>
+								</div>
+                            </p:column>
+                            
+                            <p:column width="10%" headerText="Status" sortBy="#{pagamento.status}">
+                            	<div align="center">
+                                	<h:outputText value="#{pagamento.status}" />
+                                </div>
+                            </p:column>
+                            
+                            <p:column width="10%" headerText="Valor" sortBy="#{pagamento.valor}">
+                            	<div align="center">
+                                	<h:outputText value="R$ #{pagamento.valor}" />
+                                </div>
+                            </p:column>
+                            
+                            <p:column width="50%" headerText="Transação" sortBy="#{pagamento.idTransacao}">
+                            	<div align="center">
+                                	<h:outputText value="#{pagamento.idTransacao}" />
+                                </div>
+                            </p:column>
+
+                            
+                        </p:dataTable>
+						
+						
+						</p:outputPanel>
+						
+						
+
+					</div>
+						
+						
+						
+						
+
+					</div>
+
+				</div>
+			</div>
+			<p:inputText style="display: none;" id="idEscondido"
+				value="#{paymentController.idTransacao}" />
+			<p:inputText style="display: none;" id="brandEscondido"
+				value="#{paymentController.brandCreditCard}" />
+			<p:inputText style="display: none;" id="hashEscondido"
+				value="#{paymentController.hashTransacao}" />
+			<p:inputText style="display: none;" id="tokenEscondido"
+				value="#{paymentController.tokenTransacao}" />
+			<p:commandButton id="processaPagamento"
+										action="#{paymentController.processarPagamento}"
+										update=":formCadastroPagamento:panelCadastro, :formCadastroPagamento:messages, :formCadastroPagamento:panelTable"
+										style="display: none" />
+										
+                                
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

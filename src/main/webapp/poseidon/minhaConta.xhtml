@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Minha Conta</ui:define>
+
+	<ui:define name="viewname">Pessoal > Minha Conta</ui:define>
+
+	<ui:define name="head">
+		<style type="text/css">
+.ui-steps .ui-steps-item {
+	width: 50%;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroMinhaConta">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Meus Dados</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+								<div class="card">
+									<p:steps activeIndex="#{minhaContaController.indiceStep}"
+										readonly="false">
+										<p:menuitem value="Informações Básicas"
+											action="#{minhaContaController.atualizaStepParaInfoBasicas}"
+											update=":formCadastroMinhaConta:panelCadastro" />
+										<p:menuitem value="Endereço"
+											action="#{minhaContaController.atualizaStepParaInfoEndereco}"
+											update=":formCadastroMinhaConta:panelCadastro" />
+									</p:steps>
+								</div>
+
+
+								<p:outputPanel id="panelInfoBasicas"
+									rendered="#{minhaContaController.mostraInfoBasicas}">
+									<p:panelGrid columns="2"
+										columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+										layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+
+										<p:outputLabel for="nomeCompleto" value="Nome Completo" />
+										<p:inputText id="nomeCompleto"
+											value="#{minhaContaController.usuario.nome}" required="true" />
+										
+										<p:outputLabel for="email" value="Email" />
+										<p:inputText id="email" disabled="true"
+											value="#{minhaContaController.usuario.email}" required="true" />
+											
+										<p:outputLabel for="cpf" value="CPF" />
+										<p:inputMask id="cpf" mask="999.999.999-99" disabled="true"
+											value="#{minhaContaController.usuario.cpf}" required="true" />
+											
+										<p:outputLabel for="dtNascimento" value="Data de Nascimento" />
+										<p:calendar id="dtNascimento" mask="true" locale="pt" pattern="dd/MM/yyyy"
+											value="#{minhaContaController.usuario.dtNascimento}" required="true" />
+											
+										<p:outputLabel for="telefone" value="Telefone" />
+										<p:inputMask id="telefone" mask="(99) 9999-9999"
+											value="#{minhaContaController.usuario.telefone}"/>
+											
+										<p:outputLabel for="celular" value="Celular" />
+										<p:inputMask id="celular" mask="(99) 99999-9999"
+											value="#{minhaContaController.usuario.celular}" required="true" />
+											
+
+									</p:panelGrid>
+									<br></br>
+									<div align="center">
+										<p:commandButton value="Avançar" process="@this, nomeCompleto, email, cpf, dtNascimento, telefone, celular"
+											action="#{minhaContaController.atualizaStepParaInfoEndereco}"
+											update=":formCadastroMinhaConta:panelCadastro, :formCadastroMinhaConta:messages"
+											style="width:auto" />
+									</div>
+								</p:outputPanel>
+
+								<p:outputPanel id="panelEndereco"
+									rendered="#{!minhaContaController.mostraInfoBasicas}">
+									<p:panelGrid columns="2"
+										columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+										layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+									
+										<p:outputLabel for="cep" value="Cep" />
+										<p:inputMask id="cep" mask="99999-999" value="#{minhaContaController.endereco.cep}" required="true">
+											<p:ajax event="blur" update=":formCadastroMinhaConta:panelCadastro, :formCadastroMinhaConta:messages" listener="#{minhaContaController.consultaEnderecoPorCep}"/>
+										</p:inputMask>
+										
+										<p:outputLabel for="logradouro" value="Logradouro" />
+										<p:inputText id="logradouro" value="#{minhaContaController.endereco.rua}" required="true"/>
+																				
+										<p:outputLabel for="numero" value="Número" />
+										<p:inputText id="numero" value="#{minhaContaController.endereco.numero}" />
+																				
+										<p:outputLabel for="complemento" value="Completo" />
+										<p:inputText id="complemento" value="#{minhaContaController.endereco.complemento}"/>	
+																			
+										<p:outputLabel for="bairro" value="Bairro" />
+										<p:inputText id="bairro" value="#{minhaContaController.endereco.bairro}" required="true"/>
+
+
+									</p:panelGrid>
+									<br></br>
+									<div align="center">
+										<p:commandButton value="Voltar" process="@this"
+											action="#{minhaContaController.atualizaStepParaInfoBasicas}"
+											update=":formCadastroMinhaConta:panelCadastro"
+											style="width:auto" />
+										<p:commandButton value="Salvar" process="@this, cep, logradouro, numero, complemento, bairro"
+											update=":formCadastroMinhaConta:panelCadastro, :formCadastroMinhaConta:messages"
+											style="width:auto" action="#{minhaContaController.atualizarDados}"/>
+									</div>
+								</p:outputPanel>
+
+							</p:outputPanel>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

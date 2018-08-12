@@ -1,0 +1,53 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    
+    <a id="right-sidebar-button-open" href="#">
+        <i class="fa fa-angle-left"></i>
+    </a>
+    
+    <div id="right-sidebar" class="right-sidebar">
+        <div class="nano">            
+            <div class="right-sidebar-header ui-widget-header">
+                <i class="fa fa-star"></i>
+                <span>Suporte</span>
+                <a id="right-sidebar-button-close" href="#">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+        
+            <div class="nano-content sidebar-scroll-content">
+                <p:accordionPanel activeIndex="0" multiple="true">
+                    <p:tab title="Formulário para suporte">
+                    <h:form id="formSuporteRapido">
+                    	<p:outputLabel id="suporteRapido">
+                    	<p:messages id="messages" showDetail="true" closable="true" />
+	                        <div class="ui-g ui-fluid contact-form">
+	                            <div class="ui-g-12">
+	                                <p:inputText placeholder="Nome" value="#{supportController.usuario.nome}" disabled="true"/>
+	                            </div>
+	                            <div class="ui-g-12">
+	                                <p:inputText placeholder="E-mail" value="#{supportController.usuario.email}" disabled="true"/>
+	                            </div>
+	                            <div class="ui-g-12">
+	                                <p:inputText placeholder="Mensagen" value="#{supportController.suporte.mensagem}"/>
+	                            </div>
+	                            <div class="ui-g-12">
+	                                <p:commandButton value="Enviar" icon="fa fa-paper-plane-o"
+	                                   action="#{supportController.enviar}" update="formSuporteRapido">
+									</p:commandButton>
+	                            </div>
+	                        </div>
+                        </p:outputLabel>
+                        </h:form>
+
+                    </p:tab>
+                </p:accordionPanel>
+            </div>
+        </div>
+    </div>
+    
+</ui:composition>

@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Suporte</ui:define>
+
+	<ui:define name="viewname">Suporte > Enviar Mensagem</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroSuporte">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Enviar Mensagem para o Suporte</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+									<p:panelGrid columns="2"
+										columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+										layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+
+										<p:outputLabel for="assunto" value="Assunto" />
+										<p:inputText id="assunto" required="true" value="#{supportController.suporte.assunto}"/>
+										
+										<p:outputLabel for="mensagem" value="Mensagem" />
+										<p:inputTextarea id="mensagem" required="true" value="#{supportController.suporte.mensagem}" rows="10" />
+										
+									</p:panelGrid>
+									<br></br>
+									<div align="center">
+										<p:commandButton value="Enviar"
+											action="#{supportController.enviar}"
+											update=":formCadastroSuporte:panelCadastro, :formCadastroSuporte:messages"
+											style="width:auto" />
+										<p:commandButton value="Limpar Dados" process="@this"
+											action="#{supportController.limparDados}"
+											update=":formCadastroSuporte:panelCadastro, :formCadastroSuporte:messages"
+											style="width:auto" />
+									</div>
+								</p:outputPanel>
+
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

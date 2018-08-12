@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>PrimeFaces Poseidon</title>
+    </h:head>
+
+    <h:body styleClass="login-body">
+    <h:form id="formCadastro">
+        <div class="login-panel ui-fluid">
+        	
+            <div class="ui-g">
+                <div class="ui-g-12 logo-container">
+                    <p:graphicImage name="images/login/login-logo.png" library="poseidon-layout" />
+                </div>
+                <p:messages id="messages" showDetail="true" closable="true" />
+                <div class="ui-g-12">
+                    <p:inputText placeholder="Nome" value="#{cadastroController.usuario.nome}" />
+                </div>
+                <div class="ui-g-12">
+                    <p:inputText placeholder="E-mail" value="#{cadastroController.usuario.email}" />
+                </div>
+                <div class="ui-g-12">
+                    <p:inputMask placeholder="CPF" mask="999.999.999-99" value="#{cadastroController.usuario.cpf}" />
+                </div>
+                <div class="ui-g-12">
+                	<p:password id="novaSenha" promptLabel="Digite a Senha" weakLabel="Fraca" placeholder="Senha" rendered="true"
+                    						goodLabel="Boa" strongLabel="Forte" feedback="true"  value="#{cadastroController.usuario.senha}" inline="true" />
+                </div>
+                
+                <div class="ui-g-12 button-container">
+                	<p:commandButton value="Cadastrar" icon="fa fa-user-plus" styleClass="turquoise-btn" action="#{cadastroController.cadastrar}" update=":formCadastro"/> 
+                	<p:commandButton value="Limpar Dados" icon="fa fa-eraser" styleClass="blue-btn" action="#{cadastroController.limparDados}" update=":formCadastro" process="@this"/>
+                </div>
+                
+                
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                
+                <div class="ui-g-12">
+                    <p:outputLabel value="Já possui conta?"/>
+                </div>
+                <div class="ui-g-12">
+                    <p:button outcome="/poseidon/login" value="Entrar" icon="fa fa-user" styleClass="blue-btn" />
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="poseidon-layout" />
+        </h:form>
+    </h:body>
+
+</html>
