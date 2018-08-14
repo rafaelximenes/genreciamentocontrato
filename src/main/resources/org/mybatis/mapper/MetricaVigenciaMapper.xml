@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.MetricaVigenciaMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.MetricaVigencia" id="MetricaVigenciaResultMap">
+	<id property="id" column="id"/>
+	<result property="vigenciaContrato.id" column="id_vigencia_contrato"/>
+	<result property="metrica.id" column="id_metrica"/>
+	<result property="qtdMetrica" column="quantidade_metrica"/>
+	<result property="valorMetrica" column="valor_metrica"/>
+	
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.MetricaVigencia">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_metricavigencia')
+  	</selectKey>
+  	insert into metrica_vigencia
+  	(id,
+  	id_vigencia_contrato,
+  	id_metrica,
+  	quantidade_metrica,
+  	valor_metrica)
+  	values 
+  	(#{id},
+  	 #{vigenciaContrato.id},
+  	 #{metrica.id},
+  	 #{qtdMetrica},
+  	 #{valorMetrica}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="MetricaVigenciaResultMap">
+  	select * from metrica_vigencia mv, metrica m, vigencia_contrato vc where mv.id_vigencia_contrato=vc.id and mv.id_metrica=m.id;
+  </select>
+  
+  
+</mapper>

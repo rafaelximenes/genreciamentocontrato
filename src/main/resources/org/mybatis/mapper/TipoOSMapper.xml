@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.TipoOSMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.TipoOS" id="TipoOSResultMap">
+	<id property="id" column="id"/>
+	<result property="nome" column="nome"/>
+	<result property="flagSustentacao" column="flag_sustentacao"/>
+	<result property="metrica.id" column="id_metrica"/>
+	
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.TipoOS">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_tipoos')
+  	</selectKey>
+  	insert into tipo_os
+  	(id,
+  	nome,
+  	flag_sustentacao,
+  	id_metrica)
+  	values 
+  	(#{id},
+  	 #{nome},
+  	 #{flagSustentacao},
+  	 #{metrica.id}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="TipoOSResultMap">
+  	select * from tipo_os;
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Contrato</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar Contrato</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroContrato">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar Contrato</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="numero" value="Número" />
+									<p:inputText id="numero" required="true"
+										value="#{contratoController.contrato.numero}" />
+
+									<p:outputLabel for="ano" value="Ano" />
+									<p:inputText id="ano" required="true"
+										value="#{contratoController.contrato.ano}" />
+
+									<p:outputLabel for="fornecedor" value="Fornecedor" />
+									<p:selectOneMenu id="fornecedor"
+										value="#{contratoController.contrato.fornecedor}"
+										converter="fornecedorConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+										<f:selectItems value="#{contratoController.listaFornecedores}"
+											var="fornecedor" itemLabel="#{fornecedor.nomeFantasia}"
+											itemValue="#{fornecedor}" />
+
+									</p:selectOneMenu>
+
+									<p:outputLabel for="inicioVigencia" value="Início Vigência:" />
+									<p:calendar id="inicioVigencia" required="true"
+										value="#{contratoController.vigenciaContrato.inicioVigencia}"
+										pattern="dd/MM/yyyy" showOn="button" />
+
+									<p:outputLabel for="terminoVigencia" value="Término Vigência:" />
+									<p:calendar id="terminoVigencia"
+										value="#{contratoController.vigenciaContrato.terminoVigencia}"
+										pattern="dd/MM/yyyy" showOn="button" />
+
+								</p:panelGrid>
+
+								<p:panel id="basic" header="Métrica a ser utilizada">
+
+									<p:panelGrid columns="2"
+										columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+										layout="grid" styleClass="ui-panelgrid-blank form-group"
+										style="border:0px none; background-color:transparent;">
+
+										<p:outputLabel for="metrica" value="Métrica" />
+										<p:selectOneMenu id="metrica"
+											value="#{contratoController.metricaVigencia.metrica}"
+											converter="metricaConverter" lazy="true">
+											<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+											<f:selectItems value="#{contratoController.listaMetricas}"
+												var="metrica" itemLabel="#{metrica.nome}"
+												itemValue="#{metrica}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="quantidade" value="Quantidade" />
+										<p:inputText id="quantidade" required="true"
+											value="#{contratoController.metricaVigencia.qtdMetrica}" />
+
+										<p:outputLabel for="valor" value="Valor" />
+										<p:inputText id="valor" required="true"
+											value="#{contratoController.metricaVigencia.valorMetrica}" />
+
+									</p:panelGrid>
+								</p:panel>
+
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar"
+										action="#{contratoController.cadastrar}"
+										update=":formCadastroContrato:panelCadastro, :formCadastroContrato:messages, :formCadastroContrato:panelTable"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{contratoController.limparDados}"
+										update=":formCadastroContrato:panelCadastro, :formCadastroContrato:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+						<div class="card card-w-title">
+							<h1>Contratos Cadastrados</h1>
+							<p:messages id="messagesDataTable" showDetail="true"
+								closable="true" />
+							<p:outputPanel id="panelTable">
+								<p:dataTable var="contrato"
+									filteredValue="#{contratoController.listaFiltrada}"
+									value="#{contratoController.listaContratos}" reflow="true"
+									emptyMessage="Nenhum Contrato Cadastrado"
+									widgetVar="contratoTable" rowKey="#{contrato.id}"
+									paginator="true" rows="10">
+									<f:facet name="header">
+										<p:outputPanel>
+											<h:outputText value="Pesquisa por todos os campos:" />
+											<p:inputText id="globalFilter"
+												onkeyup="PF('contratoTable').filter()" style="width:150px"
+												placeholder="Palavra a pesquisar" />
+										</p:outputPanel>
+									</f:facet>
+									<p:column filterBy="#{contrato.numero}" width="30%"
+										headerText="Número" sortBy="#{contrato.numero}">
+										<h:outputText value="#{contrato.numero}" />
+									</p:column>
+
+									<p:column filterBy="#{contrato.ano}" width="30%"
+										headerText="Ano" sortBy="#{contrato.ano}">
+										<h:outputText value="#{contrato.ano}" />
+									</p:column>
+
+									<p:column filterBy="#{contrato.fornecedor.nomeFantasia}"
+										width="40%" headerText="Fornecedor"
+										sortBy="#{contrato.fornecedor.nomeFantasia}">
+										<div align="center">
+											<h:outputText value="#{contrato.fornecedor.nomeFantasia}" />
+										</div>
+									</p:column>
+
+								</p:dataTable>
+
+							</p:outputPanel>
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

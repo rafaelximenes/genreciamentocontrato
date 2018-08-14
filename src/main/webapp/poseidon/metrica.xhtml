@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Métrica</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar Métrica</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroMetrica">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar Métrica</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="nome" value="Nome" />
+									<p:inputText id="nome" required="true"
+										value="#{metricaController.metrica.nome}" />
+
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar"
+										action="#{metricaController.cadastrar}"
+										update=":formCadastroMetrica:panelCadastro, :formCadastroMetrica:messages, :formCadastroMetrica:panelTable"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{metricaController.limparDados}"
+										update=":formCadastroMetrica:panelCadastro, :formCadastroMetrica:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+						<div class="card card-w-title">
+							<h1>Métricas Cadastrados</h1>
+							<p:messages id="messagesDataTable" showDetail="true"
+								closable="true" />
+							<p:outputPanel id="panelTable">
+								<p:dataTable var="metrica" filteredValue="#{metricaController.listaFiltrada}" 
+									value="#{metricaController.listaMetricas}" reflow="true"
+									emptyMessage="Nenhum Metrica Cadastrado" widgetVar="metricaTable"
+									rowKey="#{metrica.id}" paginator="true" rows="10">
+									<f:facet name="header">
+							            <p:outputPanel>
+							                <h:outputText value="Pesquisa por todos os campos:" />
+							                <p:inputText id="globalFilter" onkeyup="PF('metricaTable').filter()" style="width:150px" placeholder="Palavra a pesquisar"/>
+							            </p:outputPanel>
+							        </f:facet>
+									<p:column filterBy="#{metrica.nome}" width="30%" headerText="Nome Fantasia"
+										sortBy="#{metrica.nome}">
+										<h:outputText value="#{metrica.nome}" />
+									</p:column>
+
+								</p:dataTable>
+
+							</p:outputPanel>
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

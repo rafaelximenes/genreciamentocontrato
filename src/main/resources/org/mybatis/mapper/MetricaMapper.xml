@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.MetricaMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.Metrica" id="MetricaResultMap">
+	<id property="id" column="id"/>
+	<result property="nome" column="nome"/>
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Metrica">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_metrica')
+  	</selectKey>
+  	insert into metrica
+  	(id,
+  	nome)
+  	values 
+  	(#{id},
+  	 #{nome}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="MetricaResultMap">
+  	select * from metrica;
+  </select>
+  
+  
+</mapper>

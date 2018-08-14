@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.ContratoMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.Contrato" id="ContratoResultMap">
+	<id property="id" column="id"/>
+	<result property="numero" column="numero"/>
+	<result property="ano" column="ano"/>
+	<result property="fornecedor.id" column="id_fornecedor"/>
+	<result property="fornecedor.razaoSocial" column="razao_social"/>
+	<result property="fornecedor.nomeFantasia" column="nome_fantasia"/>
+	<result property="fornecedor.cnpj" column="cnpj"/>
+	
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Contrato">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_contrato')
+  	</selectKey>
+  	insert into contrato
+  	(id,
+  	numero,
+  	ano,
+  	id_fornecedor)
+  	values 
+  	(#{id},
+  	 #{numero},
+  	 #{ano},
+  	 #{fornecedor.id}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="ContratoResultMap">
+  	select * from contrato c, fornecedor f where c.id_fornecedor = f.id;
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Tipo OS</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar Tipo OS</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroTipoOS">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar Tipo OS</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="nome" value="Nome" />
+									<p:inputText id="nome" required="true"
+										value="#{tipoOSController.tipoOS.nome}" />
+
+									<p:outputLabel for="flag" value="Flag Sustentação " />
+        							<p:selectBooleanCheckbox id="flag" value="#{tipoOSController.tipoOS.flagSustentacao}" />
+
+									<p:outputLabel for="metrica" value="Métrica" />
+										<p:selectOneMenu id="metrica"
+											value="#{tipoOSController.tipoOS.metrica}"
+											converter="metricaConverter" lazy="true">
+											<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+											<f:selectItems value="#{tipoOSController.listaMetricas}" 
+												var="metrica" itemLabel="#{metrica.nome}"
+												itemValue="#{metrica}" />
+										</p:selectOneMenu>
+
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar"
+										action="#{tipoOSController.cadastrar}"
+										update=":formCadastroTipoOS:panelCadastro, :formCadastroTipoOS:messages, :formCadastroTipoOS:panelTable"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{tipoOSController.limparDados}"
+										update=":formCadastroTipoOS:panelCadastro, :formCadastroTipoOS:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+						<div class="card card-w-title">
+							<h1>Tipo OS's Cadastradas</h1>
+							<p:messages id="messagesDataTable" showDetail="true"
+								closable="true" />
+							<p:outputPanel id="panelTable">
+								<p:dataTable var="tipoOS" filteredValue="#{tipoOSController.listaFiltrada}" 
+									value="#{tipoOSController.listaTipoOSes}" reflow="true"
+									emptyMessage="Nenhum Tipo OS Cadastrado" widgetVar="tipoOSTable"
+									rowKey="#{tipoOS.id}" paginator="true" rows="10">
+									<f:facet name="header">
+							            <p:outputPanel>
+							                <h:outputText value="Pesquisa por todos os campos:" />
+							                <p:inputText id="globalFilter" onkeyup="PF('tipoOSTable').filter()" style="width:150px" placeholder="Palavra a pesquisar"/>
+							            </p:outputPanel>
+							        </f:facet>
+									<p:column filterBy="#{tipoOS.nome}" width="50%" headerText="Nome"
+										sortBy="#{tipoOS.nome}">
+										<h:outputText value="#{tipoOS.nome}" />
+									</p:column>
+
+									<p:column filterBy="#{tipoOS.sustentacaoFormatado}" width="50%" headerText="Sustentação?"
+										sortBy="#{tipoOS.sustentacaoFormatado}">
+										<h:outputText value="#{tipoOS.sustentacaoFormatado}" />
+									</p:column>
+
+								</p:dataTable>
+
+							</p:outputPanel>
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

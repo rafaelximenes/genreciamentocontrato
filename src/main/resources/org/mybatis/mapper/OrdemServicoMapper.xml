@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.OrdemServicoMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico" id="OrdemServicoResultMap">
+	<id property="id" column="id"/>
+	<result property="contrato.id" column="id_contrato"/>
+	<result property="tipoOS.id" column="id_tipo_os"/>
+	<result property="numero" column="numero"/>
+	<result property="ano" column="ano"/>
+	<result property="dataAbertura" column="data_abertura"/>
+	<result property="dataInicioPeriodo" column="data_inicio_periodo"/>
+	<result property="dataFimPeriodo" column="data_fim_periodo"/>
+	<result property="qtdDias" column="qt_dias"/>
+	<result property="qtdDiasUteis" column="qt_dias_uteis"/>
+	<result property="vigenciaContrato.id" column="id_vigencia_contrato"/>
+	
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_ordemservico')
+  	</selectKey>
+  	insert into ordem_servico
+  	(id,
+  	id_contrato,
+  	id_tipo_os,
+  	numero,
+  	ano,
+  	data_abertura,
+  	data_inicio_periodo,
+  	data_fim_periodo,
+  	qt_dias,
+  	qt_dias_uteis,
+  	id_vigencia_contrato)
+  	values 
+  	(#{id},
+  	 #{contrato.id},
+  	 #{tipoOS.id},
+  	 #{numero},
+  	 #{ano},
+  	 #{dataAbertura},
+  	 #{dataInicioPeriodo},
+  	 #{dataFimPeriodo},
+  	 #{qtdDias},
+  	 #{qtdDiasUteis},
+  	 #{vigenciaContrato.id}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="OrdemServicoResultMap">
+  	select * from ordem_servico;
+  </select>
+  
+  <select id="selectUltimoNumeroPorAno" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico" resultType="java.lang.Integer">
+  	select numero from ordem_servico where ano=#{ano} and id_contrato=#{contrato.id};
+  </select>
+  
+  
+</mapper>

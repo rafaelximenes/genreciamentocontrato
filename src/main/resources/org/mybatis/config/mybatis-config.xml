@@ -9,14 +9,20 @@
       <dataSource type="POOLED">
         <property name="driver" value="org.postgresql.Driver"/>
         <!--<property name="url" value="jdbc:postgresql://banco:8082/postgres"/> -->
-        <property name="url" value="jdbc:postgresql://banco:5432/postgres"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
         <property name="username" value="postgres"/>
        <!-- <property name="password" value="@postgres@"/> -->
-        <property name="password" value="1wqpostgres1htg3"/> 
+        <property name="password" value="123456"/> 
       </dataSource>
     </environment>
   </environments>
   <mappers>
     <mapper resource="org/mybatis/mapper/FornecedorMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/ContratoMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/MetricaMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/MetricaVigenciaMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/TipoOSMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/OrdemServicoMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/VigenciaContratoMapper.xml"/>
   </mappers>
 </configuration>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.VigenciaContratoMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.VigenciaContrato" id="VigenciaContratoResultMap">
+	<id property="id" column="id"/>
+	<result property="inicioVigencia" column="inicio_vigencia"/>
+	<result property="terminoVigencia" column="termino_vigencia"/>
+	<result property="contrato.id" column="id_contrato"/>
+	<result property="contrato.numero" column="numero"/>
+	<result property="contrato.ano" column="ano"/>
+	<result property="contrato.fornecedor.id" column="id_fornecedor"/>
+	
+</resultMap>
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.VigenciaContrato" id="VigenciaResultMap">
+	<id property="id" column="id"/>
+	<result property="inicioVigencia" column="inicio_vigencia"/>
+	<result property="terminoVigencia" column="termino_vigencia"/>
+	<result property="contrato.id" column="id_contrato"/>
+	
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.VigenciaContrato">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_vigenciacontrato')
+  	</selectKey>
+  	insert into vigencia_contrato
+  	(id,
+  	inicio_vigencia,
+  	termino_vigencia,
+  	id_contrato)
+  	values 
+  	(#{id},
+  	 #{inicioVigencia},
+  	 #{terminoVigencia},
+  	 #{contrato.id}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="VigenciaContratoResultMap">
+  	select * from vigencia_contrato v, contrato c where v.id_contrato = c.id;
+  </select>
+  
+  
+  <select id="selectVigenciaValidaPorContrato" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.VigenciaContrato" resultMap="VigenciaResultMap">
+  	select * from vigencia_contrato v where v.id_contrato = #{contrato.id} and NOW() between inicio_vigencia  and termino_vigencia;
+  </select> 
+  
+  
+  
+  
+</mapper>

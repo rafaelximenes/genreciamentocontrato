@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Ordem de Serviço</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar Ordem de Serviço</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroOrdemServico">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar Ordem de Serviço</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="contrato" value="Contrato" />
+									<p:selectOneMenu id="contrato"
+										value="#{ordemServicoController.ordemServico.contrato}"
+										converter="contratoConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+										<f:selectItems value="#{ordemServicoController.listaContratos}" 
+											var="contrato" itemLabel="#{contrato.nome}"
+											itemValue="#{contrato}" />
+
+									</p:selectOneMenu>
+
+									<p:outputLabel for="tipoos" value="Tipo OS" />
+									<p:selectOneMenu id="tipoos"
+										value="#{ordemServicoController.ordemServico.tipoOS}"
+										converter="tipoOSConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+										<f:selectItems value="#{ordemServicoController.listaTipoOS}"
+											var="tipoos" itemLabel="#{tipoos.nome}"
+											itemValue="#{tipoos}" />
+
+									</p:selectOneMenu>
+
+									<p:outputLabel for="numero" value="Número" />
+									<p:inputText id="numero" required="true"
+										value="#{ordemServicoController.ordemServico.numero}" />
+										
+									<p:outputLabel for="ano" value="Ano" />
+									<p:inputText id="ano" required="true"
+										value="#{ordemServicoController.ordemServico.ano}" />
+										
+									<p:outputLabel for="dataAbertura" value="Data Abertura" />
+									<p:calendar id="dataAbertura" required="true"
+										value="#{ordemServicoController.ordemServico.dataAbertura}"
+										pattern="dd/MM/yyyy" showOn="button" />
+										
+									<p:outputLabel for="dataInicioPeriodo" value="Data Início Período" />
+									<p:calendar id="dataInicioPeriodo" required="true"
+										value="#{ordemServicoController.ordemServico.dataInicioPeriodo}"
+										pattern="dd/MM/yyyy" showOn="button" />
+										
+									<p:outputLabel for="dataFimPeriodo" value="Data Fim Período:" />
+									<p:calendar id="dataFimPeriodo" required="true"
+										value="#{ordemServicoController.ordemServico.dataFimPeriodo}"
+										pattern="dd/MM/yyyy" showOn="button" />
+										
+									<p:outputLabel for="qtdDias" value="Quantidade de Dias" />
+									<p:outputLabel id="qtdDias" value="#{ordemServicoController.ordemServico.qtdDias}" />
+									
+									<p:outputLabel for="qtdDiasUteis" value="Quantidade de Dias Úteis" />
+									<p:inputText id="qtdDiasUteis" value="#{ordemServicoController.ordemServico.qtdDiasUteis}" />
+
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar"
+										action="#{ordemServicoController.cadastrar}"
+										update=":formCadastroOrdemServico:panelCadastro, :formCadastroOrdemServico:messages, :formCadastroOrdemServico:panelTable"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{ordemServicoController.limparDados}"
+										update=":formCadastroOrdemServico:panelCadastro, :formCadastroOrdemServico:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+						<div class="card card-w-title">
+							<h1>OrdemServicoes Cadastrados</h1>
+							<p:messages id="messagesDataTable" showDetail="true"
+								closable="true" />
+							<p:outputPanel id="panelTable">
+								<p:dataTable var="ordemServico" filteredValue="#{ordemServicoController.listaFiltrada}" 
+									value="#{ordemServicoController.listaOrdemServicoes}" reflow="true"
+									emptyMessage="Nenhum OrdemServico Cadastrado" widgetVar="ordemServicoTable"
+									rowKey="#{ordemServico.id}" paginator="true" rows="10">
+									<f:facet name="header">
+							            <p:outputPanel>
+							                <h:outputText value="Pesquisa por todos os campos:" />
+							                <p:inputText id="globalFilter" onkeyup="PF('ordemServicoTable').filter()" style="width:150px" placeholder="Palavra a pesquisar"/>
+							            </p:outputPanel>
+							        </f:facet>
+									<p:column filterBy="#{ordemServico.nomeFantasia}" width="30%" headerText="Nome Fantasia"
+										sortBy="#{ordemServico.nomeFantasia}">
+										<h:outputText value="#{ordemServico.nomeFantasia}" />
+									</p:column>
+
+									<p:column filterBy="#{ordemServico.razaoSocial}" width="50%" headerText="Razão Social"
+										sortBy="#{ordemServico.razaoSocial}">
+										<h:outputText value="#{ordemServico.razaoSocial}" />
+									</p:column>
+
+									<p:column filterBy="#{ordemServico.cnpjFormatado}" width="20%" headerText="CNPJ"
+										sortBy="#{ordemServico.cnpjFormatado}">
+										<div align="center">
+											<h:outputText value="#{ordemServico.cnpjFormatado}" />
+										</div>
+									</p:column>
+
+
+
+								</p:dataTable>
+
+							</p:outputPanel>
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>
