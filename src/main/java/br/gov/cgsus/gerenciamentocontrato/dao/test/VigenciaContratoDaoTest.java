@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import br.gov.cgsus.gerenciamentocontrato.dao.VigenciaContratoDao;
 import br.gov.cgsus.gerenciamentocontrato.domain.Contrato;
+import br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico;
 import br.gov.cgsus.gerenciamentocontrato.domain.VigenciaContrato;
 
 public class VigenciaContratoDaoTest {
@@ -49,21 +50,20 @@ public class VigenciaContratoDaoTest {
 	@Test
 	public void selectVigenciaValidaPorContrato() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		VigenciaContrato vigenciaContrato = new VigenciaContrato();
+		OrdemServico ordemServico = new OrdemServico();
 		Contrato contrato = new Contrato();
 		contrato.setId(8);
-		vigenciaContrato.setContrato(contrato);
+		ordemServico.setContrato(contrato);
 		
 		try {
-			vigenciaContrato.setInicioVigencia(sdf.parse("01/01/2018"));
-			vigenciaContrato.setTerminoVigencia(sdf.parse("12/12/2018"));
+			ordemServico.setDataAbertura(sdf.parse("16/09/2018"));
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 		try{
-			VigenciaContrato retorno = vigenciaContratoDao.selectVigenciaValidaPorContrato(vigenciaContrato);
+			VigenciaContrato retorno = vigenciaContratoDao.selectVigenciaValidaPorContrato(ordemServico);
 			Assert.assertTrue(retorno!=null);
 		}catch(Exception e) {
 			Assert.assertTrue(false);

@@ -24,5 +24,10 @@
     <mapper resource="org/mybatis/mapper/TipoOSMapper.xml"/>
     <mapper resource="org/mybatis/mapper/OrdemServicoMapper.xml"/>
     <mapper resource="org/mybatis/mapper/VigenciaContratoMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/SistemaMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/TamanhoFuncionalMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/TipoDisponibilidadeMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/NivelCriticidadeMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/SistemaOSMapper.xml"/>
   </mappers>
 </configuration>

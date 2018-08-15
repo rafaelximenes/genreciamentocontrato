@@ -2,6 +2,7 @@ package br.gov.cgsus.gerenciamentocontrato.dao;
 
 import java.util.List;
 
+import br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico;
 import br.gov.cgsus.gerenciamentocontrato.domain.VigenciaContrato;
 
 public class VigenciaContratoDao extends Dao{
@@ -32,10 +33,9 @@ public class VigenciaContratoDao extends Dao{
 		return sqlSession.selectList(pacote + ".selectAll");
 	}
 	
-	public VigenciaContrato selectVigenciaValidaPorContrato(VigenciaContrato vigenciaContrato) {
+	public VigenciaContrato selectVigenciaValidaPorContrato(OrdemServico ordemServico) {
 		sqlSession = abreConexao();
-		sqlSession.selectList(pacote + ".selectVigenciaValidaPorContrato");
-		return sqlSession.selectOne(pacote + ".selectVigenciaValidaPorContrato", vigenciaContrato);
+		return sqlSession.selectOne(pacote + ".selectVigenciaValidaPorContrato", ordemServico);
 	}
 	
 	

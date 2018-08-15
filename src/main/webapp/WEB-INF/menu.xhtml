@@ -16,16 +16,18 @@
                     </div>
                     <p:outputPanel>
 	                    <pp:menu widgetVar="me">
-	                        <p:menuitem id="om_dashboard" value="Dashboard" icon="fa fa-fw fa-home" outcome="/poseidon/dashboard"/>
+	                        <p:menuitem id="om_dashboard" value="Dashboard" icon="fa fa-fw fa-home" outcome="/poseidon/fornecedor"/>
 	                        <p:submenu id="aom_themes" label="Ordem de Serviço" icon="fa fa-fw fa-bell">
-	                            <p:menuitem id="atheme1" value="Cadastrar" icon="fa fa-fw fa-plus-square" ajax="false" outcome="/poseidon/dashboard"/>
-	                            <p:menuitem id="atheme2" value="Histórico de OS" icon="fa fa-fw fa-history" ajax="false"  outcome="/poseidon/dashboard"/>
+	                            <p:menuitem id="atheme1" value="Cadastrar" icon="fa fa-fw fa-plus-square" ajax="false" outcome="/poseidon/ordem_servico"/>
+	                            <p:menuitem id="atheme2" value="Histórico de OS" icon="fa fa-fw fa-history" ajax="false"  outcome="/poseidon/fornecedor"/>
 	                        </p:submenu>
 	                       	<p:submenu id="parametros" label="Administração" icon="fa fa-fw fa-unlock-alt">
 	                       		<p:menuitem id="cadastrarFornecedor" value="Cadastrar Fornecedor" icon="fa fa-fw fa-css3" ajax="false" outcome="/poseidon/fornecedor" />
 	                       		<p:menuitem id="cadastrarMetrica" value="Cadastrar Métrica" icon="fa fa-fw fa-css3" ajax="false" outcome="/poseidon/metrica" />
 	                       		<p:menuitem id="cadastrarTipoos" value="Cadastrar Tipo OS" icon="fa fa-fw fa-css3" ajax="false" outcome="/poseidon/tipoos" />
 	                            <p:menuitem id="cadastrarContrato" value="Cadastrar Contrato" icon="fa fa-fw fa-css3" ajax="false" outcome="/poseidon/contrato" />
+	                            <p:menuitem id="cadastrarSistema" value="Cadastrar Sistema" icon="fa fa-fw fa-css3" ajax="false" outcome="/poseidon/sistema" />
+	                            <p:menuitem id="cadastrarTamanhoFuncional" value="Cadastrar Tamanho Funcional" icon="fa fa-fw fa-css3" ajax="false" outcome="/poseidon/sistema" />
 	                            
 	                        </p:submenu>
 	                    </pp:menu>

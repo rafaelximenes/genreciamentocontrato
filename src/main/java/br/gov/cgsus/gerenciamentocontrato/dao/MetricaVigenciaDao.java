@@ -32,5 +32,10 @@ public class MetricaVigenciaDao extends Dao{
 		return sqlSession.selectList(pacote + ".selectAll");
 	}
 	
+	public Double selectMetricaPorVigencia(MetricaVigencia metricaVigencia) {
+		sqlSession = abreConexao();
+		return sqlSession.selectOne(pacote + ".selectMetricaPorVigencia", metricaVigencia);
+	}
+	
 
 }

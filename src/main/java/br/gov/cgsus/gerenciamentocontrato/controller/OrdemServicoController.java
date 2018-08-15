@@ -1,10 +1,13 @@
 package br.gov.cgsus.gerenciamentocontrato.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 
 import br.gov.cgsus.gerenciamentocontrato.domain.Contrato;
 import br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico;
@@ -12,6 +15,8 @@ import br.gov.cgsus.gerenciamentocontrato.domain.TipoOS;
 import br.gov.cgsus.gerenciamentocontrato.service.ContratoBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.OrdemServicoBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.TipoOSBusiness;
+import br.gov.cgsus.gerenciamentocontrato.service.VigenciaContratoBusiness;
+import br.gov.cgsus.gerenciamentocontrato.utils.Util;
 
 @ManagedBean
 @ViewScoped
@@ -19,13 +24,15 @@ public class OrdemServicoController extends Controller {
 
 	private OrdemServico ordemServico;
 	
+	private OrdemServico ordemServicoSelected;
+	
 	private List<OrdemServico> listaOrdemServicoes;
 	
 	private List<OrdemServico> listaFiltrada;
 	
 	private List<Contrato> listaContratos;
 	
-	private List<TipoOS> listaTipoOS;
+	private List<TipoOS> listaTipoOS; 
 	
 	private OrdemServicoBusiness ordemServicoBusiness;
 	
@@ -35,6 +42,25 @@ public class OrdemServicoController extends Controller {
 		ordemServico = new OrdemServico();
 		pesquisar();
 		pesquisarListaCombos();
+	}
+	
+	public void buscaNovoNumeroOS() {
+		if(ordemServico.getContrato()!=null && ordemServico.getTipoOS()!=null && ordemServico.getAno()!=null) { 
+			OrdemServicoBusiness ordemServicoBusiness = new OrdemServicoBusiness();
+			try {
+				ordemServico.setNumero(ordemServicoBusiness.selectUltimoNumeroPorAno(ordemServico));
+			} catch (Exception e) {
+				jsfError(e.getMessage());
+				ordemServico.setNumero(1); 
+			}
+		}
+		
+	}
+	
+	public void calculaQtdDias() {
+		if(ordemServico.getDataInicioPeriodo()!=null && ordemServico.getDataFimPeriodo()!=null) {
+			ordemServico.setQtdDias(Util.diferencaDeDiasEntreDatas(ordemServico.getDataInicioPeriodo(), ordemServico.getDataFimPeriodo()));
+		}
 	}
 	
 	private void pesquisarListaCombos() {
@@ -55,8 +81,9 @@ public class OrdemServicoController extends Controller {
 
 	public void cadastrar() {
 		try {
+			buscaVigenciaPelaDataAbertura();
 			ordemServicoBusiness.inserir(ordemServico);
-			jsfInfo("OrdemServico cadastrado com sucesso!");
+			jsfInfo("Ordem de Serviço cadastrada com sucesso!");
 			pesquisar();
 		} catch (Exception e) {
 			jsfError(e.getMessage());
@@ -65,6 +92,17 @@ public class OrdemServicoController extends Controller {
 		
 	}
 	
+	private void buscaVigenciaPelaDataAbertura() {
+		VigenciaContratoBusiness vigenciaContratoBusiness = new VigenciaContratoBusiness();
+		try {
+			ordemServico.setVigenciaContrato(vigenciaContratoBusiness.selectVigenciaValidaPorContrato(ordemServico));
+		} catch (Exception e) {
+			jsfError(e.getMessage());
+			ordemServico.setVigenciaContrato(null);
+		}
+		
+	}
+
 	public void pesquisar() {
 		try {
 			listaOrdemServicoes = ordemServicoBusiness.selectAll();
@@ -73,6 +111,14 @@ public class OrdemServicoController extends Controller {
 		}
 		
 	}
+	
+	public String chamaPaginaVincularSistemas() {
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		Map<String, Object> sessionMap = externalContext.getSessionMap();
+		sessionMap.put("os_user", ordemServicoSelected);
+		return "/poseidon/sistema_os.jsf?faces-redirect=true";
+	}
+	
 	
 	public void limparDados() {
 		inicializar();
@@ -116,6 +162,16 @@ public class OrdemServicoController extends Controller {
 
 	public void setListaTipoOS(List<TipoOS> listaTipoOS) {
 		this.listaTipoOS = listaTipoOS;
+	}
+
+	public OrdemServico getOrdemServicoSelected() {
+		return ordemServicoSelected;
+	}
+
+	public void setOrdemServicoSelected(OrdemServico ordemServicoSelected) {
+		if(ordemServicoSelected!=null) {
+			this.ordemServicoSelected = ordemServicoSelected;
+		}
 	}
 
 	

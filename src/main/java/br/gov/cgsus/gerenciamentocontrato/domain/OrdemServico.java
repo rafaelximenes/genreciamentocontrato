@@ -34,6 +34,11 @@ public class OrdemServico implements Serializable {
 	
 	public OrdemServico() {
 	}
+	
+	public OrdemServico(Integer id) {
+		super();
+		this.id = id;
+	}
 
 	public OrdemServico(Integer id, Contrato contrato, TipoOS tipoOS, Integer numero, Integer ano, Date dataAbertura,
 			Date dataInicioPeriodo, Date dataFimPeriodo, Integer qtdDias, Integer qtdDiasUteis,

@@ -45,11 +45,8 @@
   </select>
   
   
-  <select id="selectVigenciaValidaPorContrato" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.VigenciaContrato" resultMap="VigenciaResultMap">
-  	select * from vigencia_contrato v where v.id_contrato = #{contrato.id} and NOW() between inicio_vigencia  and termino_vigencia;
+  <select id="selectVigenciaValidaPorContrato" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico" resultMap="VigenciaResultMap">
+  	select * from vigencia_contrato v where v.id_contrato = #{contrato.id} and #{dataAbertura} between inicio_vigencia  and termino_vigencia;
   </select> 
-  
-  
-  
   
 </mapper>

@@ -66,5 +66,27 @@ public class OrdemServicoBusiness {
 			throw new Exception("Erro ao buscar no banco de dados.");
 		}
 	}
+	
+	public Integer selectUltimoNumeroPorAno(OrdemServico ordemServico) throws Exception {
+		if(ordemServico==null) {
+			throw new Exception("Ordem de Serviço nula.");
+		}
+		if(ordemServico.getAno()==null) {
+			throw new Exception("Ano é um campo obrigatório.");
+		}
+		if(ordemServico.getContrato()==null) {
+			throw new Exception("Contrato é um campo obrigatório.");
+		}
+		if(ordemServico.getContrato().getId()==null) {
+			throw new Exception("Contrato é um campo obrigatório.");
+		}
+		try {
+			Integer retorno = ordemServicoDao.selectUltimoNumeroPorAno(ordemServico);
+			return retorno+1;
+		}catch(Exception e) {
+			throw new Exception("Erro ao buscar no banco de dados.");
+		}
+		
+	}
 
 }

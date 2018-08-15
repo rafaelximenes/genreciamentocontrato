@@ -1,0 +1,123 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Tamanho Funcional</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar Tamanho Funcional</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroTamanhoFuncional">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar Tamanho Funcional</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+									
+									<p:outputLabel for="sistema" value="Sistema" />
+									<p:selectOneMenu id="sistema"
+										value="#{tamanhoFuncionalController.tamanhoFuncional.sistema}"
+										converter="sistemaConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+										<f:selectItems value="#{tamanhoFuncionalController.listaSistemas}"
+											var="sistema" itemLabel="#{sistema.nome}"
+											itemValue="#{sistema}" />
+
+									</p:selectOneMenu>
+									
+									<p:outputLabel for="dataVigencia" value="Data Vigência:" />
+									<p:calendar id="dataVigencia" required="true" mask="true" locale="pt"
+										value="#{tamanhoFuncionalController.tamanhoFuncional.dataVigencia}"
+										pattern="dd/MM/yyyy" showOn="button" >
+									</p:calendar>
+
+									<p:outputLabel for="tamanho" value="Tamanho Funcional" />
+									<p:inputText id="tamanho" required="true"
+										value="#{tamanhoFuncionalController.tamanhoFuncional.tamanhoPontoFuncao}" />
+
+									
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar"
+										action="#{tamanhoFuncionalController.cadastrar}"
+										update=":formCadastroTamanhoFuncional:panelCadastro, :formCadastroTamanhoFuncional:messages, :formCadastroTamanhoFuncional:panelTable"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{tamanhoFuncionalController.limparDados}"
+										update=":formCadastroTamanhoFuncional:panelCadastro, :formCadastroTamanhoFuncional:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+						<div class="card card-w-title">
+							<h1>Tamanho Funcional de Sistemas Cadastrados</h1>
+							<p:messages id="messagesDataTable" showDetail="true"
+								closable="true" />
+							<p:outputPanel id="panelTable">
+								<p:dataTable var="tamanhoFuncional" filteredValue="#{tamanhoFuncionalController.listaFiltrada}" 
+									value="#{tamanhoFuncionalController.listaTamanhoFuncionales}" reflow="true"
+									emptyMessage="Nenhum TamanhoFuncional Cadastrado" widgetVar="tamanhoFuncionalTable"
+									rowKey="#{tamanhoFuncional.id}" paginator="true" rows="10">
+									<f:facet name="header">
+							            <p:outputPanel>
+							                <h:outputText value="Pesquisa por todos os campos:" />
+							                <p:inputText id="globalFilter" onkeyup="PF('tamanhoFuncionalTable').filter()" style="width:150px" placeholder="Palavra a pesquisar"/>
+							            </p:outputPanel>
+							        </f:facet>
+									<p:column filterBy="#{tamanhoFuncional.sistema.nome}" width="50%" headerText="Sistema"
+										sortBy="#{tamanhoFuncional.sistema.nome}">
+										<h:outputText value="#{tamanhoFuncional.sistema.nome}" />
+									</p:column>
+
+									<p:column filterBy="#{tamanhoFuncional.dataVigencia}" width="25%" headerText="Data Vigência"
+										sortBy="#{tamanhoFuncional.dataVigencia}">
+										<div align="center">
+											<h:outputText value="#{tamanhoFuncional.dataVigencia}" >
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</div>
+										
+									</p:column>
+									
+									<p:column filterBy="#{tamanhoFuncional.tamanhoPontoFuncao}" width="25%" headerText="Tamanho Funcional"
+										sortBy="#{tamanhoFuncional.tamanhoPontoFuncao}">
+										<h:outputText value="#{tamanhoFuncional.tamanhoPontoFuncao}" />
+									</p:column>
+
+
+								</p:dataTable>
+
+							</p:outputPanel>
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

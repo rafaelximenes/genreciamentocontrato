@@ -46,5 +46,21 @@ public class MetricaVigenciaDaoTest {
 			Assert.assertTrue(false);
 		}
 	}
+	
+	@Test
+	public void selectMetricaPorVigencia() {
+		MetricaVigencia metricaVigencia = new MetricaVigencia();
+		VigenciaContrato vigenciaContrato = new VigenciaContrato();
+		vigenciaContrato.setId(6);
+		metricaVigencia.setVigenciaContrato(vigenciaContrato);
+		try{
+			Double list= metricaVigenciaDao.selectMetricaPorVigencia(metricaVigencia);
+			Assert.assertTrue(list!=null);
+		}catch(Exception e) {
+			Assert.assertTrue(false);
+		}
+	}
+	
+	
 
 }

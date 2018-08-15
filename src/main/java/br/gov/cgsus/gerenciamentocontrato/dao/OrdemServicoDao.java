@@ -38,7 +38,7 @@ public class OrdemServicoDao extends Dao{
 		if(retorno==null) {
 			return 1;
 		} else {
-			return retorno+1;
+			return retorno;
 		}
 	}
 	

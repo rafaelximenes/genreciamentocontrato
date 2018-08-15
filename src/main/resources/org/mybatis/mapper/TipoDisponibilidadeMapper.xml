@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.TipoDisponibilidadeMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.TipoDisponibilidade" id="TipoDisponibilidadeResultMap">
+	<id property="id" column="id"/>
+	<result property="nome" column="nome"/>
+	<result property="descricao" column="descricao"/>
+	<result property="diasCorridos" column="dias_corridos"/>
+	<result property="fatorHoras" column="fator_horas"/>
+	
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.TipoDisponibilidade">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_tipo_disponibilidade')
+  	</selectKey>
+  	insert into tipo_disponibilidade
+  	(id,
+  	nome,
+  	descricao,
+  	dias_corridos,
+  	fator_horas)
+  	values 
+  	(#{id},
+  	 #{nome},
+  	 #{descricao},
+  	 #{diasCorridos},
+  	 #{fatorHoras}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="TipoDisponibilidadeResultMap">
+  	select * from tipo_disponibilidade;
+  </select>
+  
+  
+</mapper>

@@ -33,6 +33,7 @@
 										<f:selectItems value="#{ordemServicoController.listaContratos}" 
 											var="contrato" itemLabel="#{contrato.nome}"
 											itemValue="#{contrato}" />
+										<p:ajax event="change" listener="#{ordemServicoController.buscaNovoNumeroOS}" update=":formCadastroOrdemServico:numero"/>
 
 									</p:selectOneMenu>
 
@@ -44,37 +45,47 @@
 										<f:selectItems value="#{ordemServicoController.listaTipoOS}"
 											var="tipoos" itemLabel="#{tipoos.nome}"
 											itemValue="#{tipoos}" />
+										<p:ajax event="change" listener="#{ordemServicoController.buscaNovoNumeroOS}" update=":formCadastroOrdemServico:numero"/>
 
 									</p:selectOneMenu>
-
-									<p:outputLabel for="numero" value="Número" />
-									<p:inputText id="numero" required="true"
-										value="#{ordemServicoController.ordemServico.numero}" />
 										
 									<p:outputLabel for="ano" value="Ano" />
 									<p:inputText id="ano" required="true"
-										value="#{ordemServicoController.ordemServico.ano}" />
+										value="#{ordemServicoController.ordemServico.ano}" >
+										<p:ajax event="blur" listener="#{ordemServicoController.buscaNovoNumeroOS}" update=":formCadastroOrdemServico:numero"/>
+									</p:inputText>
+										
+									<p:outputLabel for="numero" value="Número" />
+									<p:outputLabel id="numero"	value="#{ordemServicoController.ordemServico.numero}" />
 										
 									<p:outputLabel for="dataAbertura" value="Data Abertura" />
-									<p:calendar id="dataAbertura" required="true"
+									<p:calendar id="dataAbertura" required="true" mask="true" locale="pt"
 										value="#{ordemServicoController.ordemServico.dataAbertura}"
 										pattern="dd/MM/yyyy" showOn="button" />
 										
 									<p:outputLabel for="dataInicioPeriodo" value="Data Início Período" />
-									<p:calendar id="dataInicioPeriodo" required="true"
+									<p:calendar id="dataInicioPeriodo" required="true" mask="true" locale="pt"
 										value="#{ordemServicoController.ordemServico.dataInicioPeriodo}"
-										pattern="dd/MM/yyyy" showOn="button" />
+										pattern="dd/MM/yyyy" showOn="button" >
+										 
+										<p:ajax event="dateSelect" listener="#{ordemServicoController.calculaQtdDias}"  update=":formCadastroOrdemServico:qtdDias" />
+										<p:ajax event="change" listener="#{ordemServicoController.calculaQtdDias}" update=":formCadastroOrdemServico:qtdDias" />
+									</p:calendar>
 										
 									<p:outputLabel for="dataFimPeriodo" value="Data Fim Período:" />
-									<p:calendar id="dataFimPeriodo" required="true"
+									<p:calendar id="dataFimPeriodo" required="true" mask="true" locale="pt"
 										value="#{ordemServicoController.ordemServico.dataFimPeriodo}"
-										pattern="dd/MM/yyyy" showOn="button" />
+										pattern="dd/MM/yyyy" showOn="button" >
+										
+										<p:ajax event="dateSelect" listener="#{ordemServicoController.calculaQtdDias}"  update=":formCadastroOrdemServico:qtdDias" />
+										<p:ajax event="change" listener="#{ordemServicoController.calculaQtdDias}" update=":formCadastroOrdemServico:qtdDias" />
+									</p:calendar>
 										
 									<p:outputLabel for="qtdDias" value="Quantidade de Dias" />
 									<p:outputLabel id="qtdDias" value="#{ordemServicoController.ordemServico.qtdDias}" />
 									
 									<p:outputLabel for="qtdDiasUteis" value="Quantidade de Dias Úteis" />
-									<p:inputText id="qtdDiasUteis" value="#{ordemServicoController.ordemServico.qtdDiasUteis}" />
+									<p:inputText id="qtdDiasUteis" value="#{ordemServicoController.ordemServico.qtdDiasUteis}" required="=true" />
 
 								</p:panelGrid>
 								<br></br>
@@ -95,9 +106,8 @@
 
 
 
-
 						<div class="card card-w-title">
-							<h1>OrdemServicoes Cadastrados</h1>
+							<h1>Ordem de Serviços Cadastradas</h1>
 							<p:messages id="messagesDataTable" showDetail="true"
 								closable="true" />
 							<p:outputPanel id="panelTable">
@@ -111,22 +121,63 @@
 							                <p:inputText id="globalFilter" onkeyup="PF('ordemServicoTable').filter()" style="width:150px" placeholder="Palavra a pesquisar"/>
 							            </p:outputPanel>
 							        </f:facet>
-									<p:column filterBy="#{ordemServico.nomeFantasia}" width="30%" headerText="Nome Fantasia"
-										sortBy="#{ordemServico.nomeFantasia}">
-										<h:outputText value="#{ordemServico.nomeFantasia}" />
+									<p:column filterBy="#{ordemServico.numero}" width="10%" headerText="Número OS"
+										sortBy="#{ordemServico.numero}">
+										<h:outputText value="#{ordemServico.numero}" />
 									</p:column>
 
-									<p:column filterBy="#{ordemServico.razaoSocial}" width="50%" headerText="Razão Social"
-										sortBy="#{ordemServico.razaoSocial}">
-										<h:outputText value="#{ordemServico.razaoSocial}" />
+									<p:column filterBy="#{ordemServico.ano}" width="5%" headerText="Ano"
+										sortBy="#{ordemServico.ano}">
+										<h:outputText value="#{ordemServico.ano}" />
 									</p:column>
 
-									<p:column filterBy="#{ordemServico.cnpjFormatado}" width="20%" headerText="CNPJ"
-										sortBy="#{ordemServico.cnpjFormatado}">
+									<p:column filterBy="#{ordemServico.dataAbertura}" width="15%" headerText="Data de Abertura"
+										sortBy="#{ordemServico.dataAbertura}">
 										<div align="center">
-											<h:outputText value="#{ordemServico.cnpjFormatado}" />
+											<h:outputText value="#{ordemServico.dataAbertura}" >
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
 										</div>
 									</p:column>
+									
+									<p:column filterBy="#{ordemServico.dataInicioPeriodo}" width="15%" headerText="Data Início Período"
+										sortBy="#{ordemServico.dataInicioPeriodo}">
+										<div align="center">
+											<h:outputText value="#{ordemServico.dataInicioPeriodo}" >
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</div>
+									</p:column>
+									
+									<p:column filterBy="#{ordemServico.dataFimPeriodo}" width="15%" headerText="Data Fim Período"
+										sortBy="#{ordemServico.dataFimPeriodo}">
+										<div align="center">
+											<h:outputText value="#{ordemServico.dataFimPeriodo}" >
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</div>
+									</p:column>
+									
+									<p:column filterBy="#{ordemServico.contrato.numero}" width="10%" headerText="Contrato"
+										sortBy="#{ordemServico.contrato.numero}">
+										<h:outputText value="#{ordemServico.contrato.numero}" />
+									</p:column>
+									
+									<p:column filterBy="#{ordemServico.contrato.fornecedor.nomeFantasia}" width="25%" headerText="Fornecedor"
+										sortBy="#{ordemServico.contrato.fornecedor.nomeFantasia}">
+										<h:outputText value="#{ordemServico.contrato.fornecedor.nomeFantasia}" />
+									</p:column>
+									
+									<p:column width="10%" headerText="Vincular Sistema(s)">
+			                            <div align="center"> 
+			                            	<p:outputPanel>
+				                            	<p:commandButton process="@this" action="#{ordemServicoController.chamaPaginaVincularSistemas}"
+				                            		title="Vincular" icon="fa fa-flag" style="margin:24px 24px 0 0">
+				                            		<f:setPropertyActionListener value="#{ordemServico}" target="#{ordemServicoController.ordemServicoSelected}" />
+				                                </p:commandButton>
+			                                </p:outputPanel>
+			                            </div>
+		                            </p:column>
 
 
 

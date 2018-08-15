@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.SistemaOSMapper">
+
+	 
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.SistemaOS" id="SistemaOSResultMap">
+	<id property="id" column="id"/>
+	<result property="ordemServico.id" column="id_os"/>
+	<result property="tamanhoPF" column="tamanho_pf"/>
+	<result property="coberturaTeste" column="cobertura_teste"/>
+	<result property="nivelCriticidade.id" column="id_tipo_criticidade"/>
+	<result property="tipoDisponibilidade.id" column="id_tipo_disponibilidade"/>
+	<result property="percentualDisponibilidade" column="perc_disponibilidade"/>
+	<result property="qtdhoraSustentada" column="qt_hora_sustentacao"/>
+	<result property="fatorPFS" column="fator_pfs"/>
+	<result property="nivelCriticidade.tempoIndisponibilidade" column="tempo_indisponibilidade"/>
+	<result property="qtdPFS" column="qt_pfs"/>
+	<result property="valorUnitarioPFS" column="valor_unitario_pfs"/>
+	<result property="disponibilidadeApurada" column="disponibilidade_apurada"/>
+	<result property="novoTamanhoPF" column="novo_tamanho_pf"/>
+	<result property="sistema.id" column="id_sistema"/>
+	
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.SistemaOS">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_sistema_os')
+  	</selectKey>
+  	insert into sistema_os
+  	(id,
+  	id_os,
+  	tamanho_pf,
+  	cobertura_teste,
+  	id_tipo_criticidade,
+  	id_tipo_disponibilidade,
+  	perc_disponibilidade,
+  	qt_hora_sustentacao,
+  	fator_pfs,
+  	tempo_indisponibilidade,
+  	qt_pfs,
+  	valor_unitario_pfs,
+  	disponibilidade_apurada,
+  	novo_tamanho_pf,
+  	id_sistema)
+  	values 
+  	(#{id},
+	 #{ordemServico.id},
+	 #{tamanhoPF},
+	 #{coberturaTeste},
+	 #{nivelCriticidade.id},
+	 #{tipoDisponibilidade.id},
+	 #{percentualDisponibilidade},
+	 #{qtdhoraSustentada},
+	 #{fatorPFS},
+	 #{nivelCriticidade.tempoIndisponibilidade},
+	 #{qtdPFS},
+	 #{valorUnitarioPFS},
+	 #{disponibilidadeApurada},
+	 #{novoTamanhoPF},
+	 #{sistema.id}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="SistemaOSResultMap">
+  	select * from sistema_os;
+  </select>
+  
+  
+</mapper>

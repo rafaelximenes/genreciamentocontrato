@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.NivelCriticidadeMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.NivelCriticidade" id="NivelCriticidadeResultMap">
+	<id property="id" column="id"/>
+	<result property="nome" column="nome"/>
+	<result property="tempoIndisponibilidade" column="tempo_indisponibilidade_em_horas"/>
+	<result property="fatorCriticidade" column="fator_criticidade"/>
+	
+</resultMap>
+
+  
+  <select id="selectAll" resultMap="NivelCriticidadeResultMap">
+  	select * from nivel_criticidade;
+  </select>
+  
+  
+</mapper>

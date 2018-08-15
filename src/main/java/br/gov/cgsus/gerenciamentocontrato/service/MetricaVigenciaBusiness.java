@@ -45,5 +45,22 @@ public class MetricaVigenciaBusiness {
 			throw new Exception("Erro ao buscar no banco de dados.");
 		}
 	}
+	
+	public Double selectMetricaPorVigencia(MetricaVigencia metricaVigencia) throws Exception {
+		if(metricaVigencia==null) {
+			throw new Exception("Metrica Vigência nulo.");
+		}
+		if(metricaVigencia.getVigenciaContrato()==null) {
+			throw new Exception("Vigência do contrato é um campo obrigatório.");
+		}
+		if(metricaVigencia.getVigenciaContrato().getId()==null) {
+			throw new Exception("Vigência do contrato é um campo obrigatório.");
+		}
+		try {
+			return metricaVigenciaDao.selectMetricaPorVigencia(metricaVigencia);
+		}catch(Exception e) {
+			throw new Exception("Erro ao buscar no banco de dados.");
+		}
+	}
 
 }

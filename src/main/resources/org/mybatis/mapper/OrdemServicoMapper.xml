@@ -19,6 +19,23 @@
 	
 </resultMap>
 
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico" id="OrdemServicoContratoResultMap">
+	<id property="id" column="id"/>
+	<result property="contrato.id" column="id_contrato"/>
+	<result property="tipoOS.id" column="id_tipo_os"/>
+	<result property="numero" column="numero"/>
+	<result property="ano" column="ano"/>
+	<result property="dataAbertura" column="data_abertura"/>
+	<result property="dataInicioPeriodo" column="data_inicio_periodo"/>
+	<result property="dataFimPeriodo" column="data_fim_periodo"/>
+	<result property="qtdDias" column="qt_dias"/>
+	<result property="qtdDiasUteis" column="qt_dias_uteis"/>
+	<result property="vigenciaContrato.id" column="id_vigencia_contrato"/>
+	<result property="contrato.numero" column="numero_contrato"/>
+	<result property="contrato.fornecedor.nomeFantasia" column="nome_fantasia"/>
+	
+</resultMap>
+
   <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico">
   	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
     	SELECT nextval('seq_ordemservico')
@@ -50,8 +67,9 @@
   	)
   </insert>
   
-  <select id="selectAll" resultMap="OrdemServicoResultMap">
-  	select * from ordem_servico;
+  <select id="selectAll" resultMap="OrdemServicoContratoResultMap">
+  	SELECT os.*, c.numero as numero_contrato, f.nome_fantasia
+  FROM public.ordem_servico os, contrato c, fornecedor f where os.id_contrato=c.id and c.id_fornecedor=f.id;
   </select>
   
   <select id="selectUltimoNumeroPorAno" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico" resultType="java.lang.Integer">

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.TamanhoFuncionalMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.TamanhoFuncional" id="TamanhoFuncionalResultMap">
+	<id property="sistema.id" column="id_sistema"/>
+	<id property="dataVigencia" column="data_vigencia"/>
+	<result property="tamanhoPontoFuncao" column="tamanho_funcional"/>
+	<result property="sistema.nome" column="nome"/>
+	
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.TamanhoFuncional">
+  	insert into tamanho_funcional
+  	(id_sistema,
+  	data_vigencia,
+  	tamanho_funcional)
+  	values 
+  	(#{sistema.id},
+  	 #{dataVigencia},
+  	 #{tamanhoPontoFuncao}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="TamanhoFuncionalResultMap">
+  	select * from tamanho_funcional t, sistema s where id_sistema = s.id;
+  </select>
+  
+  <select id="selectPorIdSistema" resultMap="TamanhoFuncionalResultMap" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.TamanhoFuncional">
+  	select * from tamanho_funcional t, sistema s where id_sistema = s.id and id_sistema = #{sistema.id};
+  </select>
+  
+  
+</mapper>

@@ -1,0 +1,219 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Sistema</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar Sistema</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroSistema">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar Sistema</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="nome" value="Nome" />
+									<p:inputText id="nome"
+										value="#{sistemaController.sistema.nome}" />
+
+
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar"
+										action="#{sistemaController.cadastrar}"
+										update=":formCadastroSistema:panelCadastro, :formCadastroSistema:messages, :formCadastroSistema:panelTableSistema"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{sistemaController.limparDados}"
+										update=":formCadastroSistema:panelCadastro, :formCadastroSistema:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+						<div class="card card-w-title">
+							<h1>Sistemas Cadastrados</h1>
+							<p:messages id="messagesDataTable" showDetail="true"
+								closable="true" />
+							<p:outputPanel id="panelTableSistema">
+								<p:dataTable var="sistema"
+									filteredValue="#{sistemaController.listaFiltrada}"
+									value="#{sistemaController.listaSistemaes}" reflow="true"
+									emptyMessage="Nenhum Sistema Cadastrado"
+									widgetVar="sistemaTable" rowKey="#{sistema.id}"
+									paginator="true" rows="10">
+									<f:facet name="header">
+										<p:outputPanel>
+											<h:outputText value="Pesquisa por todos os campos:" />
+											<p:inputText id="globalFilter"
+												onkeyup="PF('sistemaTable').filter()" style="width:150px"
+												placeholder="Palavra a pesquisar" />
+										</p:outputPanel>
+									</f:facet>
+									<p:column filterBy="#{sistema.nome}" width="70%"
+										headerText="Nome" sortBy="#{sistema.nome}">
+										<h:outputText value="#{sistema.nome}" />
+									</p:column>
+
+									<p:column filterBy="#{sistema.ativoFormatado}" width="20%"
+										headerText="Ativo?" sortBy="#{sistema.ativoFormatado}">
+										<h:outputText value="#{sistema.ativoFormatado}" />
+									</p:column>
+
+									<p:column width="10%" headerText="Tamanho Funcional">
+										<div align="center">
+											<p:commandButton process="@this"
+												update=":formCadastroSistema:chamadoDetail, :formCadastroSistema:dataTableFuncional"
+												oncomplete="PF('chamadoDialog').show()"
+												title="Vincular Tamanho Funcional" icon="fa fa-flag"
+												style="margin:24px 24px 0 0">
+												<f:setPropertyActionListener value="#{sistema}"
+													target="#{sistemaController.sistemaSelected}" />
+											</p:commandButton>
+										</div>
+									</p:column>
+
+
+								</p:dataTable>
+
+								<p:dialog width="60%" header="Tamanho Funcional"
+									widgetVar="chamadoDialog" responsive="true" modal="true"
+									showEffect="blind" hideEffect="explode" resizable="false">
+									<p:outputPanel id="chamadoDetail" style="text-align:center;">
+										<p:messages id="messagesTamanhoFuncional" showDetail="true"
+										closable="true" />
+										<h:panelGrid columns="2">
+
+
+											<p:outputLabel for="sistema" value="Sistema" />
+											<p:selectOneMenu id="sistema" disabled="true"
+												value="#{sistemaController.tamanhoFuncional.sistema}" 
+												converter="sistemaConverter" lazy="true">
+												<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+												<f:selectItems
+													value="#{sistemaController.listaSistemas}"
+													var="sistema" itemLabel="#{sistema.nome}"
+													itemValue="#{sistema}" />
+
+											</p:selectOneMenu>
+
+											<p:outputLabel for="dataVigencia" value="Data Vigência:" />
+											<p:calendar id="dataVigencia" mask="true"
+												locale="pt"
+												value="#{sistemaController.tamanhoFuncional.dataVigencia}"
+												pattern="dd/MM/yyyy" showOn="button">
+											</p:calendar>
+
+											<p:outputLabel for="tamanho" value="Tamanho Funcional" />
+											<p:inputText id="tamanho"
+												value="#{sistemaController.tamanhoFuncional.tamanhoPontoFuncao}" />
+
+
+
+
+
+										</h:panelGrid>
+
+										<div align="center">
+											<p:commandButton value="Cadastrar"
+												action="#{sistemaController.cadastrarTamanhoFuncional}"
+												update=":formCadastroSistema:chamadoDetail, :formCadastroSistema:dataTableFuncional"
+												style="width:auto" />
+											<p:commandButton value="Limpar Dados" process="@this"
+												action="#{sistemaController.limparDadosTamanhoFuncional}" 
+												update=":formCadastroSistema:chamadoDetail"
+												style="width:auto" />
+										</div>
+
+									</p:outputPanel>
+
+									<p:outputLabel id="dataTableFuncional">
+
+										<div class="card card-w-title">
+											<h1>Tamanho Funcional de Sistemas Cadastrados</h1>
+											
+											<p:outputPanel id="panelTable">
+												<p:dataTable var="tamanhoFuncional"
+													filteredValue="#{sistemaController.listaFiltradaTamanhoFuncional}"
+													value="#{sistemaController.listaTamanhoFuncionales}"
+													reflow="true"
+													emptyMessage="Nenhum TamanhoFuncional Cadastrado"
+													widgetVar="tamanhoFuncionalTable"
+													rowKey="#{tamanhoFuncional.id}" paginator="true" rows="10">
+													<f:facet name="header">
+														<p:outputPanel>
+															<h:outputText value="Pesquisa por todos os campos:" />
+															<p:inputText id="globalFilter"
+																onkeyup="PF('tamanhoFuncionalTable').filter()"
+																style="width:150px" placeholder="Palavra a pesquisar" />
+														</p:outputPanel>
+													</f:facet>
+													<p:column filterBy="#{tamanhoFuncional.sistema.nome}"
+														width="50%" headerText="Sistema"
+														sortBy="#{tamanhoFuncional.sistema.nome}">
+														<h:outputText value="#{tamanhoFuncional.sistema.nome}" />
+													</p:column>
+
+													<p:column filterBy="#{tamanhoFuncional.dataVigencia}"
+														width="25%" headerText="Data Vigência"
+														sortBy="#{tamanhoFuncional.dataVigencia}">
+														<div align="center">
+															<h:outputText value="#{tamanhoFuncional.dataVigencia}">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</div>
+
+													</p:column>
+
+													<p:column filterBy="#{tamanhoFuncional.tamanhoPontoFuncao}"
+														width="25%" headerText="Tamanho Funcional"
+														sortBy="#{tamanhoFuncional.tamanhoPontoFuncao}">
+														<h:outputText
+															value="#{tamanhoFuncional.tamanhoPontoFuncao}" />
+													</p:column>
+
+
+												</p:dataTable>
+
+											</p:outputPanel>
+
+										</div>
+									</p:outputLabel>
+
+								</p:dialog>
+
+							</p:outputPanel>
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

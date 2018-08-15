@@ -36,5 +36,9 @@
   	select * from metrica_vigencia mv, metrica m, vigencia_contrato vc where mv.id_vigencia_contrato=vc.id and mv.id_metrica=m.id;
   </select>
   
+  <select id="selectMetricaPorVigencia" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.MetricaVigencia" resultType="java.lang.Double">
+  	SELECT valor_metrica  FROM public.metrica_vigencia where id_vigencia_contrato=#{vigenciaContrato.id};
+  </select>
+  
   
 </mapper>
