@@ -73,7 +73,7 @@ public class SistemasOSController extends Controller {
 	
 	public void calculaQuantPFS() {
 		if(sistemaOS.getQtdhoraSustentada()!=null && sistemaOS.getPercentualDisponibilidade()!=null) {
-			Double a = sistemaOS.getQtdhoraSustentada()/720 * sistemaOS.getPercentualDisponibilidade()/99.5*10000;
+			Double a = sistemaOS.getQtdhoraSustentada()/720 * sistemaOS.getPercentualDisponibilidade()/99.5*100;
 			sistemaOS.setFatorPFS(a);
 			calculaQtPFS();
 			calculaValorServico();
@@ -83,7 +83,7 @@ public class SistemasOSController extends Controller {
 
 	private void calculaQtPFS() {
 		if(sistemaOS.getTamanhoPF()!=null && sistemaOS.getFatorPFS()!=null && sistemaOS.getNivelCriticidade()!=null) {
-			Double a = sistemaOS.getTamanhoPF()*sistemaOS.getFatorPFS()*sistemaOS.getNivelCriticidade().getFatorCriticidade();
+			Double a = sistemaOS.getTamanhoPF()*(sistemaOS.getFatorPFS()/100)*(sistemaOS.getNivelCriticidade().getFatorCriticidade()/100);
 			sistemaOS.setQtdPFS(a);
 		}
 		
