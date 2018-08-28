@@ -20,8 +20,10 @@ import br.gov.cgsus.gerenciamentocontrato.service.MetricaVigenciaBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.NivelCriticidadeBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.OrdemServicoBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.SistemaBusiness;
+import br.gov.cgsus.gerenciamentocontrato.service.SistemaOSBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.TamanhoFuncionalBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.TipoDisponibilidadeBusiness;
+import br.gov.cgsus.gerenciamentocontrato.utils.Util;
 
 @ManagedBean
 @ViewScoped
@@ -74,7 +76,7 @@ public class SistemasOSController extends Controller {
 	public void calculaQuantPFS() {
 		if(sistemaOS.getQtdhoraSustentada()!=null && sistemaOS.getPercentualDisponibilidade()!=null) {
 			Double a = sistemaOS.getQtdhoraSustentada()/720 * sistemaOS.getPercentualDisponibilidade()/99.5*100;
-			sistemaOS.setFatorPFS(a);
+			sistemaOS.setFatorPFS(Util.round(a, 2));
 			calculaQtPFS();
 			calculaValorServico();
 		}
@@ -84,14 +86,15 @@ public class SistemasOSController extends Controller {
 	private void calculaQtPFS() {
 		if(sistemaOS.getTamanhoPF()!=null && sistemaOS.getFatorPFS()!=null && sistemaOS.getNivelCriticidade()!=null) {
 			Double a = sistemaOS.getTamanhoPF()*(sistemaOS.getFatorPFS()/100)*(sistemaOS.getNivelCriticidade().getFatorCriticidade()/100);
-			sistemaOS.setQtdPFS(a);
+			sistemaOS.setQtdPFS(Util.round(a, 2));
 		}
 		
 	}
-
+	
 	private void calculaValorServico() {
 		if(sistemaOS.getValorUnitarioPFS()!=null) {
 			valorServico = sistemaOS.getQtdPFS() * sistemaOS.getValorUnitarioPFS();
+			valorServico = Util.round(valorServico, 2);
 		}
 		
 	}
@@ -153,15 +156,18 @@ public class SistemasOSController extends Controller {
 		}
 	}
 	
+	
 	public void cadastrar() {
-		/*try {
-			fornecedorBusiness.inserir(fornecedor);
-			jsfInfo("Fornecedor cadastrado com sucesso!");
+		SistemaOSBusiness sistemaOSBusiness = new SistemaOSBusiness();
+		try {
+			sistemaOS.setOrdemServico(ordemServico);
+			sistemaOSBusiness.inserir(sistemaOS);
+			jsfInfo("Sistema da OS cadastrado com sucesso!");
 			pesquisar();
 		} catch (Exception e) {
 			jsfError(e.getMessage());
 		}
-		limparDados();*/
+		limparDados();
 		
 	}
 	

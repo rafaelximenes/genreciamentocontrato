@@ -1,0 +1,243 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Usuário</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar Usuário</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroUsuario">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar Usuário</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="nome" value="Nome" />
+									<p:inputText id="nome" required="true"
+										value="#{usuarioController.usuario.nome}" />
+
+									<p:outputLabel for="email" value="E-mail" />
+									<p:inputText id="email" required="true"
+										value="#{usuarioController.usuario.email}" />
+
+									<p:outputLabel for="cpf" value="CPF" />
+									<p:inputText id="cpf" required="true"
+										value="#{usuarioController.usuario.cpf}" />
+										
+									<p:outputLabel for="senha" value="Senha" />
+									<p:password id="senha" required="true"
+										value="#{usuarioController.usuario.senha}" />
+										
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar"
+										action="#{usuarioController.cadastrar}"
+										update=":formCadastroUsuario:panelCadastro, :formCadastroUsuario:messages, :formCadastroUsuario:panelTable"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{usuarioController.limparDados}"
+										update=":formCadastroUsuario:panelCadastro, :formCadastroUsuario:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+						<div class="card card-w-title">
+							<h1>Usuários Cadastrados</h1>
+							<p:messages id="messagesDataTable" showDetail="true"
+								closable="true" />
+							<p:outputPanel id="panelTable">
+								<p:dataTable var="usuario" filteredValue="#{usuarioController.listaFiltrada}" 
+									value="#{usuarioController.listaUsuarioes}" reflow="true"
+									emptyMessage="Nenhum Usuario Cadastrado" widgetVar="usuarioTable"
+									rowKey="#{usuario.id}" paginator="true" rows="10">
+									<f:facet name="header">
+							            <p:outputPanel>
+							                <h:outputText value="Pesquisa por todos os campos:" />
+							                <p:inputText id="globalFilter" onkeyup="PF('usuarioTable').filter()" style="width:150px" placeholder="Palavra a pesquisar"/>
+							            </p:outputPanel>
+							        </f:facet>
+									<p:column filterBy="#{usuario.nome}" width="30%" headerText="Nome"
+										sortBy="#{usuario.nome}">
+										<h:outputText value="#{usuario.nome}" />
+									</p:column>
+
+									<p:column filterBy="#{usuario.email}" width="50%" headerText="E-mail"
+										sortBy="#{usuario.email}">
+										<h:outputText value="#{usuario.email}" />
+									</p:column>
+
+									<p:column filterBy="#{usuario.cpf}" width="20%" headerText="CPF"
+										sortBy="#{usuario.cpf}">
+										<div align="center">
+											<h:outputText value="#{usuario.cpf}" />
+										</div>
+									</p:column>
+									
+									
+									<p:column width="10%" headerText="Vincular Perfil ao Contrato">
+										<div align="center">
+											<p:commandButton process="@this"
+												update=":formCadastroUsuario:chamadoDetail"
+												oncomplete="PF('chamadoDialog').show()"
+												title="Vincular Perfil ao Contrato" icon="fa fa-flag"
+												style="margin:24px 24px 0 0">
+												<f:setPropertyActionListener value="#{usuario}"
+													target="#{usuarioController.usuarioSelected}" /> 
+											</p:commandButton>
+										</div>
+									</p:column>
+
+
+
+								</p:dataTable>
+								
+								
+								
+								
+								
+								<p:dialog width="60%" header="Vincular Perfil ao Contrato"
+									widgetVar="chamadoDialog" responsive="true" modal="true"
+									showEffect="blind" hideEffect="explode" resizable="false">
+									<p:outputPanel id="chamadoDetail" style="text-align:center;">
+										<p:messages id="messagesTamanhoFuncional" showDetail="true"
+										closable="true" />
+										<h:panelGrid columns="2">
+
+
+											<p:outputLabel for="perfil" value="Perfil" />
+												<p:selectOneMenu id="perfil"
+													value="#{usuarioController.perfilString}">
+													<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+													<f:selectItems value="#{usuarioController.listaPerfilString}"  
+														var="perfil" itemLabel="#{perfil}"
+														itemValue="#{perfil}" />
+													<p:ajax event="change" listener="#{usuarioController.buscaPerfilPorNome}"/>
+												</p:selectOneMenu>
+												
+												<p:outputLabel for="contrato" value="Contrato" />
+											        <p:selectOneMenu id="contrato" value="#{usuarioController.listaContratosSelecteds}" 
+											        	converter="contratoConverter" lazy="true">
+											            <f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+											            <f:selectItems value="#{usuarioController.listaContratos}" 
+														var="contrato" itemLabel="#{contrato.nome}"
+														itemValue="#{contrato}" />
+											        </p:selectManyMenu>
+
+										</h:panelGrid>
+
+										<div align="center"> 
+											<p:commandButton value="Vincular"
+												action="#{usuarioController.vincularPerfilAoContrato}"
+												update=":formCadastroSistema:chamadoDetail, :formCadastroSistema:dataTableFuncional"
+												style="width:auto" />
+											<p:commandButton value="Limpar Dados" process="@this"
+												action="#{usuarioController.limparDadosVinculacao}" 
+												update=":formCadastroSistema:chamadoDetail"
+												style="width:auto" />
+										</div>
+
+									</p:outputPanel>
+
+									<p:outputLabel id="dataTableFuncional">
+
+										<div class="card card-w-title">
+											<h1>Lista de Perfis vinculados aos contratos</h1>
+											
+											<p:outputPanel id="panelTable">
+												<p:dataTable var="tamanhoFuncional"
+													filteredValue="#{sistemaController.listaFiltradaTamanhoFuncional}"
+													value="#{sistemaController.listaTamanhoFuncionales}"
+													reflow="true"
+													emptyMessage="Nenhum TamanhoFuncional Cadastrado"
+													widgetVar="tamanhoFuncionalTable"
+													rowKey="#{tamanhoFuncional.id}" paginator="true" rows="10">
+													<f:facet name="header">
+														<p:outputPanel>
+															<h:outputText value="Pesquisa por todos os campos:" />
+															<p:inputText id="globalFilter"
+																onkeyup="PF('tamanhoFuncionalTable').filter()"
+																style="width:150px" placeholder="Palavra a pesquisar" />
+														</p:outputPanel>
+													</f:facet>
+													<p:column filterBy="#{tamanhoFuncional.sistema.nome}"
+														width="50%" headerText="Sistema"
+														sortBy="#{tamanhoFuncional.sistema.nome}">
+														<h:outputText value="#{tamanhoFuncional.sistema.nome}" />
+													</p:column>
+
+													<p:column filterBy="#{tamanhoFuncional.dataVigencia}"
+														width="25%" headerText="Data Vigência"
+														sortBy="#{tamanhoFuncional.dataVigencia}">
+														<div align="center">
+															<h:outputText value="#{tamanhoFuncional.dataVigencia}">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</h:outputText>
+														</div>
+
+													</p:column>
+
+													<p:column filterBy="#{tamanhoFuncional.tamanhoPontoFuncao}"
+														width="25%" headerText="Tamanho Funcional"
+														sortBy="#{tamanhoFuncional.tamanhoPontoFuncao}">
+														<h:outputText
+															value="#{tamanhoFuncional.tamanhoPontoFuncao}" />
+													</p:column>
+
+
+												</p:dataTable>
+
+											</p:outputPanel>
+
+										</div>
+									</p:outputLabel>
+
+								</p:dialog>
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+
+							</p:outputPanel>
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

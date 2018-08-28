@@ -125,10 +125,10 @@
 								</p:panelGrid>
 								<br></br>
 								<div align="center">
-									<p:commandButton value="Cadastrar"
+									<p:commandButton value="Cadastrar" action="#{sistemasOSController.cadastrar}"
 										update=":formCadastroSistemaOS:panelCadastro, :formCadastroSistemaOS:messages"
 										style="width:auto" />
-									<p:commandButton value="Limpar Dados" process="@this"
+									<p:commandButton value="Limpar Dados" process="@this" action="#{sistemasOSController.limparDados}"
 										update=":formCadastroSistemaOS:panelCadastro, :formCadastroSistemaOS:messages"
 										style="width:auto" />
 								</div>

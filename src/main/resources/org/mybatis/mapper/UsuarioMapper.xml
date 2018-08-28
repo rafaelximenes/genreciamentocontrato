@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.UsuarioMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.UsuarioContrato" id="UsuarioResultMap">
+	<result property="usuario.nome" column="nome_usuario"/>
+	
+	<result property="contrato.id" column="id_contrato"/>
+	<result property="contrato.numero" column="numero_contrato"/>
+	<result property="contrato.ano" column="ano_contrato"/>
+	
+	<result property="usuario.perfil.id" column="id_perfil"/>
+	
+</resultMap>
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.Usuario" id="UsuarioMap">
+	<id property="id" column="id"/>
+	<result property="nome" column="nome"/>
+	<result property="email" column="email"/>
+	<result property="cpf" column="cpf"/>
+</resultMap>
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.Perfil" id="PerfilResultMap">
+	<id property="id" column="id"/>
+	<result property="nome" column="nome"/>
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_usuario')
+  	</selectKey>
+  	insert into usuario
+  	(id,
+  	nome,
+  	id_perfil,
+  	email,
+  	cpf,
+  	senha)
+  	values 
+  	(#{id},
+  	 #{nome},
+  	 #{perfil.id},
+  	 #{email},
+  	 #{cpf},
+  	 #{senha}
+  	)
+  </insert>
+  
+  <select id="selectByCpfSenha" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario" resultMap="UsuarioResultMap">
+  	select u.nome as nome_usuario, c.id as id_contrato, c.numero as numero_contrato, c.ano as ano_contrato, p.id as id_perfil from usuario u, usuario_contrato uc, contrato c, perfil p where u.cpf=#{cpf} and senha=#{senha} and uc.id_usuario = u.id and uc.id_contrato=c.id and u.id_perfil=p.id;
+  </select>
+  
+  <select id="selectAll" resultMap="UsuarioMap">
+  	select * from usuario u;
+  </select>
+  
+  <select id="selectPerfil" resultMap="PerfilResultMap">
+  	select * from perfil p;
+  </select>
+  
+  <insert id="vincularUsuarioAoContrato" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.UsuarioContrato">
+  	
+  	insert into usuario_contrato
+  	(id_usuario,
+  	id_contrato)
+  	values 
+  	(#{usuario.id},
+  	 #{contrato.id}
+  	)
+  </insert>
+  
+  
+</mapper>

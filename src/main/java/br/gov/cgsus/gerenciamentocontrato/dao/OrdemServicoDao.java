@@ -36,7 +36,7 @@ public class OrdemServicoDao extends Dao{
 		sqlSession = abreConexao();
 		Integer retorno = sqlSession.selectOne(pacote + ".selectUltimoNumeroPorAno", ordemServico);
 		if(retorno==null) {
-			return 1;
+			return 0;
 		} else {
 			return retorno;
 		}

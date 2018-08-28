@@ -50,7 +50,7 @@
 									</p:selectOneMenu>
 										
 									<p:outputLabel for="ano" value="Ano" />
-									<p:inputText id="ano" required="true"
+									<p:inputText id="ano" 
 										value="#{ordemServicoController.ordemServico.ano}" >
 										<p:ajax event="blur" listener="#{ordemServicoController.buscaNovoNumeroOS}" update=":formCadastroOrdemServico:numero"/>
 									</p:inputText>
@@ -59,12 +59,12 @@
 									<p:outputLabel id="numero"	value="#{ordemServicoController.ordemServico.numero}" />
 										
 									<p:outputLabel for="dataAbertura" value="Data Abertura" />
-									<p:calendar id="dataAbertura" required="true" mask="true" locale="pt"
+									<p:calendar id="dataAbertura"  mask="true" locale="pt"
 										value="#{ordemServicoController.ordemServico.dataAbertura}"
 										pattern="dd/MM/yyyy" showOn="button" />
 										
 									<p:outputLabel for="dataInicioPeriodo" value="Data Início Período" />
-									<p:calendar id="dataInicioPeriodo" required="true" mask="true" locale="pt"
+									<p:calendar id="dataInicioPeriodo"  mask="true" locale="pt"
 										value="#{ordemServicoController.ordemServico.dataInicioPeriodo}"
 										pattern="dd/MM/yyyy" showOn="button" >
 										 
@@ -73,7 +73,7 @@
 									</p:calendar>
 										
 									<p:outputLabel for="dataFimPeriodo" value="Data Fim Período:" />
-									<p:calendar id="dataFimPeriodo" required="true" mask="true" locale="pt"
+									<p:calendar id="dataFimPeriodo"  mask="true" locale="pt"
 										value="#{ordemServicoController.ordemServico.dataFimPeriodo}"
 										pattern="dd/MM/yyyy" showOn="button" >
 										
@@ -168,13 +168,23 @@
 										<h:outputText value="#{ordemServico.contrato.fornecedor.nomeFantasia}" />
 									</p:column>
 									
-									<p:column width="10%" headerText="Vincular Sistema(s)">
+									<p:column width="5%" headerText="Vincular Sistema(s)">
 			                            <div align="center"> 
 			                            	<p:outputPanel>
 				                            	<p:commandButton process="@this" action="#{ordemServicoController.chamaPaginaVincularSistemas}"
 				                            		title="Vincular" icon="fa fa-flag" style="margin:24px 24px 0 0">
 				                            		<f:setPropertyActionListener value="#{ordemServico}" target="#{ordemServicoController.ordemServicoSelected}" />
 				                                </p:commandButton>
+			                                </p:outputPanel>
+			                            </div>
+		                            </p:column>
+		                            
+		                            <p:column width="5%" headerText="Gerar Relatório">
+			                            <div align="center"> 
+			                            	<p:outputPanel>
+			                            		<h:commandButton process="@this"  action="#{ordemServicoController.criaRelatorio}" value="Relatório" >
+			                            			<f:setPropertyActionListener value="#{ordemServico}" target="#{ordemServicoController.ordemServicoSelected}" />
+			                            		</h:commandButton>
 			                                </p:outputPanel>
 			                            </div>
 		                            </p:column>
@@ -194,8 +204,6 @@
 				</div>
 			</div>
 		</h:form>
-
-
 
 	</ui:define>
 </ui:composition>

@@ -29,5 +29,6 @@
     <mapper resource="org/mybatis/mapper/TipoDisponibilidadeMapper.xml"/>
     <mapper resource="org/mybatis/mapper/NivelCriticidadeMapper.xml"/>
     <mapper resource="org/mybatis/mapper/SistemaOSMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/UsuarioMapper.xml"/>
   </mappers>
 </configuration>

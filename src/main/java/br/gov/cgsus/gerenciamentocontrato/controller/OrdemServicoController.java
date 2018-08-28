@@ -1,5 +1,10 @@
 package br.gov.cgsus.gerenciamentocontrato.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,15 +13,24 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import br.gov.cgsus.gerenciamentocontrato.domain.Contrato;
 import br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico;
 import br.gov.cgsus.gerenciamentocontrato.domain.TipoOS;
+import br.gov.cgsus.gerenciamentocontrato.report.Database;
+import br.gov.cgsus.gerenciamentocontrato.report.AbstractReportBean.ExportOption;
 import br.gov.cgsus.gerenciamentocontrato.service.ContratoBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.OrdemServicoBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.TipoOSBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.VigenciaContratoBusiness;
+import br.gov.cgsus.gerenciamentocontrato.utils.ReportConfigUtil;
 import br.gov.cgsus.gerenciamentocontrato.utils.Util;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.j2ee.servlets.BaseHttpServlet;
 
 @ManagedBean
 @ViewScoped
@@ -36,12 +50,61 @@ public class OrdemServicoController extends Controller {
 	
 	private OrdemServicoBusiness ordemServicoBusiness;
 	
+	private ExportOption exportOption;
+	
 	@PostConstruct
 	public void inicializar() {
 		ordemServicoBusiness = new OrdemServicoBusiness();
 		ordemServico = new OrdemServico();
 		pesquisar();
 		pesquisarListaCombos();
+		setExportOption(ExportOption.PDF);
+	}
+	
+	public void criaRelatorio()  throws JRException, IOException  {
+		Map<String, Object> reportParameters = new HashMap<String, Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        reportParameters.put("contrato", ordemServicoSelected.getContrato().getNumero()+"/"+ordemServicoSelected.getContrato().getAno()); //consertar ano
+        reportParameters.put("numeroos", ordemServicoSelected.getNumero()+"/"+ordemServicoSelected.getAno());
+        reportParameters.put("periodoexecucao", sdf.format(ordemServicoSelected.getDataInicioPeriodo()) +" a " + sdf.format(ordemServicoSelected.getDataFimPeriodo()));
+        reportParameters.put("requisitante", "Rúbia Piassi Dalvi Meriguete");
+        reportParameters.put("descricaoservico", "Execução de serviços de Sustentação de software, conforme disponibilidade e nível de criticidade definidos nesta Ordem de Serviço");
+        reportParameters.put("nomefantasia", ordemServicoSelected.getContrato().getFornecedor().getNomeFantasia());
+        reportParameters.put("dataemissao", sdf.format(ordemServicoSelected.getDataAbertura()));
+        reportParameters.put("tiposervico", "Sustentação de Software");
+        reportParameters.put("valorpf", "13.85");
+        reportParameters.put("qtdpfsautorizada", "R$ 6.1827,14");
+        reportParameters.put("valortotalos", "R$ 856.305,83");
+		
+		
+		
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+
+		ServletContext context = (ServletContext) externalContext.getContext();
+		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+		HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+
+		ReportConfigUtil.compileReport(context, "report/", "os");
+
+		File reportFile = new File(
+				ReportConfigUtil.getJasperFilePath(context, "report/", "os.jasper"));
+
+		///////////////////
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		/////////////////////
+
+		JasperPrint jasperPrint = ReportConfigUtil.fillReport(reportFile, reportParameters, conn);
+
+		request.getSession().setAttribute(BaseHttpServlet.DEFAULT_JASPER_PRINT_SESSION_ATTRIBUTE, jasperPrint);
+		response.sendRedirect(request.getContextPath() + "/servlets/report/" + getExportOption());
+
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 	
 	public void buscaNovoNumeroOS() {
@@ -172,6 +235,14 @@ public class OrdemServicoController extends Controller {
 		if(ordemServicoSelected!=null) {
 			this.ordemServicoSelected = ordemServicoSelected;
 		}
+	}
+
+	public ExportOption getExportOption() {
+		return exportOption;
+	}
+
+	public void setExportOption(ExportOption exportOption) {
+		this.exportOption = exportOption;
 	}
 
 	
