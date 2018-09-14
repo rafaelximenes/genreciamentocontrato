@@ -2,7 +2,7 @@ package br.gov.cgsus.gerenciamentocontrato.domain;
 
 import java.io.Serializable;
 
-public class Sistema implements Serializable {
+public class TipoAceite implements Serializable {
 	
 	/**
 	 * 
@@ -11,26 +11,23 @@ public class Sistema implements Serializable {
 
 	private Integer id;
 	
-	private String nome;
+	private String tipoAceite;
 	
-	private boolean ativo;
-	
-	private Double coberturaTesteApurado;
-	
-	public Sistema() {
+	private Integer peso;
+
+	public TipoAceite() {
 	}
 	
-	public Sistema(Integer id) {
+	public TipoAceite(Integer id) {
 		super();
 		this.id = id;
-		
 	}
 
-	public Sistema(Integer id, String nome, boolean ativo) {
+	public TipoAceite(Integer id, String tipoAceite, Integer peso) {
 		super();
 		this.id = id;
-		this.nome = nome;
-		this.ativo = ativo;
+		this.tipoAceite = tipoAceite;
+		this.peso = peso;
 	}
 
 	public Integer getId() {
@@ -41,26 +38,20 @@ public class Sistema implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getTipoAceite() {
+		return tipoAceite;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setTipoAceite(String tipoAceite) {
+		this.tipoAceite = tipoAceite;
 	}
 
-	public boolean isAtivo() {
-		return ativo;
+	public Integer getPeso() {
+		return peso;
 	}
 
-	public void setAtivo(boolean ativo) {
-		this.ativo = ativo;
-	}
-	
-	public String getAtivoFormatado() {
-		if(ativo)
-			return "Sim";
-		return "Não";
+	public void setPeso(Integer peso) {
+		this.peso = peso;
 	}
 
 	@Override
@@ -79,21 +70,13 @@ public class Sistema implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Sistema other = (Sistema) obj;
+		TipoAceite other = (TipoAceite) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-
-	public Double getCoberturaTesteApurado() {
-		return coberturaTesteApurado;
-	}
-
-	public void setCoberturaTesteApurado(Double coberturaTesteApurado) {
-		this.coberturaTesteApurado = coberturaTesteApurado;
 	}
 
 }

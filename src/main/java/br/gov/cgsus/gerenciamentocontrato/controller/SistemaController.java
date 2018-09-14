@@ -1,15 +1,22 @@
 package br.gov.cgsus.gerenciamentocontrato.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import br.gov.cgsus.gerenciamentocontrato.domain.Sistema;
 import br.gov.cgsus.gerenciamentocontrato.domain.TamanhoFuncional;
+import br.gov.cgsus.gerenciamentocontrato.domain.Usuario;
+import br.gov.cgsus.gerenciamentocontrato.service.ChamadoSistemaOSBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.SistemaBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.TamanhoFuncionalBusiness;
+import br.gov.cgsus.gerenciamentocontrato.session.UsuarioSessao;
+import br.gov.cgsus.gerenciamentocontrato.utils.Util;
 
 @ManagedBean
 @ViewScoped
@@ -36,8 +43,24 @@ public class SistemaController extends Controller {
 	
 	private TamanhoFuncionalBusiness tamanhoFuncionalBusiness;
 	
+	@ManagedProperty(value="#{usuarioSessao}")
+	private UsuarioSessao usuarioSessao;
+	
+	public void setUsuarioSessao(UsuarioSessao usuarioSessao) { 
+		this.usuarioSessao = usuarioSessao;
+	}
+	
+	
 	@PostConstruct
 	public void inicializar() {
+		Usuario usuario = usuarioSessao.getUsuario();
+		if(!Util.temPerfilParaAcessar(usuario, usuarioSessao.getContrato(), 2)) {
+			try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect("/public/erro_permissao.jsf");
+			} catch (IOException e) {
+				jsfError(e.getMessage());
+			}
+		}
 		tamanhoFuncionalBusiness = new TamanhoFuncionalBusiness();
 		tamanhoFuncional = new TamanhoFuncional();
 		sistemaBusiness = new SistemaBusiness();
@@ -54,6 +77,16 @@ public class SistemaController extends Controller {
 			jsfError(e.getMessage());
 		}
 		
+	}
+	
+	public void alterar() {
+		try {
+			sistemaBusiness.alterar(sistemaSelected);
+			jsfInfo("Alteração realizada com sucesso!");
+			pesquisar();
+		} catch (Exception e) {
+			jsfError(e.getMessage());
+		}
 	}
 	
 	public void cadastrarTamanhoFuncional() {
@@ -89,12 +122,26 @@ public class SistemaController extends Controller {
 	public void pesquisar() {
 		try {
 			listaSistemaes = sistemaBusiness.selectAll();
+			atribuiCoberturaTeste();
 		} catch (Exception e) {
 			jsfError(e.getMessage());
 		}
 		
 	}
 	
+	private void atribuiCoberturaTeste() {
+		ChamadoSistemaOSBusiness chamadoSistemaOSBusiness = new ChamadoSistemaOSBusiness();
+		for(Sistema s: listaSistemaes) {
+			try {
+				s.setCoberturaTesteApurado(chamadoSistemaOSBusiness.selectUltimoChamadoPorSistema(s.getId()).getCoberturaTesteApurado());
+			} catch (Exception e) {
+				s.setCoberturaTesteApurado(null);
+			}
+		}
+		
+	}
+
+
 	public void pesquisarTamanhoFuncional() {
 		try {
 			listaTamanhoFuncionales = tamanhoFuncionalBusiness.selectPorIdSistema(tamanhoFuncional);

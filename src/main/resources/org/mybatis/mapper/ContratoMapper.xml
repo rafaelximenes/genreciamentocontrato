@@ -36,5 +36,9 @@
   	select * from contrato c, fornecedor f where c.id_fornecedor = f.id;
   </select>
   
+  <select id="selectContratosPorEmail" parameterType="java.lang.String" resultMap="ContratoResultMap" >
+  	select c.*  from usuario_contrato uc, usuario u, contrato c where u.id=uc.id_usuario and uc.id_contrato=c.id and email=#{email};
+  </select>
+  
   
 </mapper>

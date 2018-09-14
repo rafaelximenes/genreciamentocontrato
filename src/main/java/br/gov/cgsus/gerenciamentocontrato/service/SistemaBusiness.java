@@ -31,5 +31,20 @@ public class SistemaBusiness {
 			throw new Exception("Erro ao buscar no banco de dados.");
 		}
 	}
+	
+	public void alterar(Sistema sistema) throws Exception {
+		if(sistema==null) {
+			throw new Exception("Sistema nulo.");
+		}
+		if(sistema.getNome()==null || "".equalsIgnoreCase(sistema.getNome())) {
+			throw new Exception("Nome é um campo obrigatório.");
+		}
+		
+		try {
+			sistemaDao.alterar(sistema);
+		}catch(Exception e) {
+			throw new Exception("Erro ao inserir no banco de dados.");
+		}
+	}
 
 }

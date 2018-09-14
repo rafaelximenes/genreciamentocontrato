@@ -1,11 +1,13 @@
 package br.gov.cgsus.gerenciamentocontrato.service;
 
 import java.util.List;
+import java.util.Map;
 
 import br.gov.cgsus.gerenciamentocontrato.dao.UsuarioDao;
 import br.gov.cgsus.gerenciamentocontrato.domain.Perfil;
 import br.gov.cgsus.gerenciamentocontrato.domain.Usuario;
 import br.gov.cgsus.gerenciamentocontrato.domain.UsuarioContrato;
+import br.gov.cgsus.gerenciamentocontrato.utils.Util;
 
 public class UsuarioBusiness {
 	
@@ -27,22 +29,17 @@ public class UsuarioBusiness {
 		if(usuario.getCpf()==null || "".equalsIgnoreCase(usuario.getCpf())) {
 			throw new Exception("CPF é um campo obrigatório.");
 		}
-		if(usuario.getPerfil()==null) {
-			throw new Exception("Perfil é um campo obrigatório.");
-		}
-		if(usuario.getPerfil().getId()==null) {
-			throw new Exception("Perfil é um campo obrigatório.");
-		}
 		try {
+			usuario.setSenha(Util.geraSHA256(usuario.getSenha()));
 			usuarioDao.inserir(usuario);
 		}catch(Exception e) {
 			throw new Exception("Erro ao inserir no banco de dados.");
 		}
 	}
 	
-	public List<UsuarioContrato> selectByCpfSenha(Usuario usuario) throws Exception {
+	public Usuario selectByEmailSenha(Usuario usuario) throws Exception {
 		try {
-			return usuarioDao.selectByCpfSenha(usuario);
+			return usuarioDao.selectByEmailSenha(usuario);
 		}catch(Exception e) {
 			throw new Exception("Erro ao buscar no banco de dados.");
 		}
@@ -71,5 +68,62 @@ public class UsuarioBusiness {
 			throw new Exception("Erro ao inserir no banco de dados.");
 		}
 	}
+	
+	public List<UsuarioContrato> selectUsuarioContrato(Usuario usuario) throws Exception {
+		try {
+			if(usuario==null) {
+				throw new Exception("Usuario nulo.");
+			}
+			if(usuario.getId()==null) {
+				throw new Exception("Usuario não informado.");
+			}
+			return usuarioDao.selectUsuarioContrato(usuario);
+		}catch(Exception e) {
+			throw new Exception("Erro ao buscar no banco de dados.");
+		}
+	}
+	
+	public void alteraSenha(Usuario usuario) throws Exception {
+		try {
+			usuarioDao.alteraSenha(usuario);
+		}catch(Exception e) {
+			throw new Exception("Erro ao atualizar no banco de dados.");
+		}
+	}
+	
+	public void alteraUsuario(Usuario usuario) throws Exception {
+		try {
+			usuarioDao.alteraUsuario(usuario);
+		}catch(Exception e) {
+			throw new Exception("Erro ao atualizar no banco de dados.");
+		}
+	}
+	
+	public boolean selectUsuarioIsAdmin(UsuarioContrato uc) throws Exception {
+		try {
+			return usuarioDao.selectUsuarioIsAdmin(uc);
+		}catch(Exception e) {
+			throw new Exception("Erro ao atualizar no banco de dados.");
+		}
+		
+	}
+	
+	public boolean selectUsuarioTemPerfil(Map<String, Integer> map) throws Exception {
+		try {
+			return usuarioDao.selectUsuarioTemPerfil(map);
+		}catch(Exception e) {
+			throw new Exception("Erro ao atualizar no banco de dados.");
+		}
+	}
+	
+	public Integer selectPerfilUsuario(UsuarioContrato uc) throws Exception {
+		try {
+			return usuarioDao.selectPerfilUsuario(uc);
+		}catch(Exception e) {
+			throw new Exception("Erro ao atualizar no banco de dados.");
+		}
+	}
+	
+	
 
 }

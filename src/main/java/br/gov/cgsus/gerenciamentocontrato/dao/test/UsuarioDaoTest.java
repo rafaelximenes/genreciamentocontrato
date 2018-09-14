@@ -1,6 +1,8 @@
 package br.gov.cgsus.gerenciamentocontrato.dao.test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,7 +24,6 @@ public class UsuarioDaoTest {
 		
 		Usuario usuario = new Usuario();
 		usuario.setNome("Teste");
-		usuario.setPerfil(new Perfil(1, "Adm"));
 	  	usuario.setEmail("rafaximenes1@gmail.com");
 	  	usuario.setCpf("12345678951");
 	  	usuario.setSenha("123");
@@ -36,13 +37,13 @@ public class UsuarioDaoTest {
 	}
 	
 	@Test
-	public void selectByCpfSenha() {
+	public void selectByEmailSenha() {
 		Usuario usuario = new Usuario();
-		usuario.setCpf("04208920360");
+		usuario.setEmail("rafaximenes1@gmail.com");
 		usuario.setSenha("123");
 		try{
-			List<UsuarioContrato> list= usuarioDao.selectByCpfSenha(usuario);
-			Assert.assertTrue(!list.isEmpty());
+			Usuario list= usuarioDao.selectByEmailSenha(usuario);
+			Assert.assertTrue(list!=null);
 		}catch(Exception e) {
 			Assert.assertTrue(false);
 		}
@@ -69,8 +70,20 @@ public class UsuarioDaoTest {
 	}
 	
 	@Test
+	public void selectUsuarioContrato() {
+		Usuario usuario = new Usuario();
+		usuario.setId(5);
+		try{
+			List<UsuarioContrato> list= usuarioDao.selectUsuarioContrato(usuario);
+			Assert.assertTrue(!list.isEmpty());
+		}catch(Exception e) {
+			Assert.assertTrue(false);
+		}
+	}
+	
+	@Test
 	public void vincularUsuarioAoContrato() {
-		UsuarioContrato usuarioContrato = new UsuarioContrato(new Usuario(1), new Contrato(7));
+		UsuarioContrato usuarioContrato = new UsuarioContrato(new Usuario(5), new Contrato(7), new Perfil(1));
 		try{
 			usuarioDao.vincularUsuarioAoContrato(usuarioContrato);
 			Assert.assertTrue(true);
@@ -78,5 +91,45 @@ public class UsuarioDaoTest {
 			Assert.assertTrue(false);
 		}
 	}
-
+	
+	@Test
+	public void selectUsuarioIsAdmin() {
+		UsuarioContrato uc = new UsuarioContrato();
+		uc.setContrato(new Contrato(11));
+		uc.setUsuario(new Usuario(5));
+		try{
+			boolean retorno= usuarioDao.selectUsuarioIsAdmin(uc);
+			Assert.assertTrue(retorno);
+		}catch(Exception e) {
+			Assert.assertTrue(false);
+		}
+	}
+	
+	@Test
+	public void selectUsuarioTemPerfil() {
+		Map<String, Integer> map = new HashMap<String,Integer>();
+		map.put("id_contrato", 11);
+		map.put("id_usuario", 7);
+		map.put("id_funcionalidade", 2);
+		try{
+			boolean retorno= usuarioDao.selectUsuarioTemPerfil(map);
+			Assert.assertTrue(retorno);
+		}catch(Exception e) {
+			Assert.assertTrue(false);
+		}
+	}
+	
+	@Test
+	public void selectPerfilUsuario() {
+		UsuarioContrato uc = new UsuarioContrato();
+		uc.setContrato(new Contrato(11));
+		uc.setUsuario(new Usuario(5));
+		try{
+			Integer retorno= usuarioDao.selectPerfilUsuario(uc);
+			Assert.assertTrue(retorno!=null);
+		}catch(Exception e) {
+			Assert.assertTrue(false);
+		}
+	}
+	
 }

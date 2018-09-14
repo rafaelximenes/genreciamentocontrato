@@ -30,5 +30,6 @@
     <mapper resource="org/mybatis/mapper/NivelCriticidadeMapper.xml"/>
     <mapper resource="org/mybatis/mapper/SistemaOSMapper.xml"/>
     <mapper resource="org/mybatis/mapper/UsuarioMapper.xml"/>
+    <mapper resource="org/mybatis/mapper/ChamadoSistemaOSMapper.xml"/>
   </mappers>
 </configuration>

@@ -43,5 +43,12 @@ public class ContratoDao extends Dao{
 		return sqlSession.selectList(pacote + ".selectAll");
 	}
 	
+	public List<Contrato> selectContratosPorEmail(String email) {
+		sqlSession = abreConexao();
+		return sqlSession.selectList(pacote + ".selectContratosPorEmail", email);
+	}
+	
+	
+	
 
 }

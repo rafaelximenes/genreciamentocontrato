@@ -1,0 +1,189 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">ChamadoSistemaOS</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar ChamadoSistemaOS</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroChamadoSistemaOS">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar ChamadoSistemaOS</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+									
+									<p:outputLabel for="sistema" value="Sistema" />
+									<p:selectOneMenu id="sistema"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.sistemaOS.sistema}"
+										converter="sistemaConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+										<f:selectItems value="#{chamadoSistemaOSController.listaSistemas}"  
+											var="sistema" itemLabel="#{sistema.nome}"
+											itemValue="#{sistema}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel for="descricao" value="Descrição" />
+									<p:inputText id="descricao" required="true"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.descricao}" />
+
+									<p:outputLabel for="dataAbertura" value="Data Abertura" />
+									<p:calendar id="dataAbertura"  mask="true" locale="pt"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.abertura}"
+										pattern="dd/MM/yyyy" showOn="button" />
+										
+									<p:outputLabel for="inicioAtendimento" value="Início Atendimento" />
+									<p:calendar id="inicioAtendimento"  mask="true" locale="pt"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.inicioAtendimento}"
+										pattern="dd/MM/yyyy" showOn="button" />
+										
+									<p:outputLabel for="fimAtendimento" value="Fim Atendimento" />
+									<p:calendar id="fimAtendimento"  mask="true" locale="pt"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.fimAtendimento}"
+										pattern="dd/MM/yyyy" showOn="button" />
+									
+									<p:outputLabel for="atraso" value="Atraso" />
+									<p:inputText id="atraso" required="true"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.atraso}" />
+										
+									<p:outputLabel for="tipoAceite" value="Tipo Aceite" />
+									<p:selectOneMenu id="tipoAceite"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.tipoAceite}"
+										converter="tipoAceiteConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+										<f:selectItems value="#{chamadoSistemaOSController.listaTipoAceite}" 
+											var="ta" itemLabel="#{ta.tipoAceite}"
+											itemValue="#{ta}" />
+
+									</p:selectOneMenu>
+
+									<p:outputLabel for="qtdDiasAtraso" value="Qtd. Dias Atraso Produto" />
+									<p:inputText id="qtdDiasAtraso" required="true"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.qtdDiasAtrasoProduto}" />
+										
+									<p:outputLabel for="coberturaTesteApurado" value="Cobertura Teste Apurado" />
+									<p:inputText id="coberturaTesteApurado" required="true"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.coberturaTesteApurado}" />
+										
+									<p:outputLabel for="status" value="Status" />
+									<p:inputText id="status" required="true"
+										value="#{chamadoSistemaOSController.chamadoSistemaOS.status}" />
+
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar"
+										action="#{chamadoSistemaOSController.cadastrar}"
+										update=":formCadastroChamadoSistemaOS:panelCadastro, :formCadastroChamadoSistemaOS:messages, :formCadastroChamadoSistemaOS:panelTable"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{chamadoSistemaOSController.limparDados}"
+										update=":formCadastroChamadoSistemaOS:panelCadastro, :formCadastroChamadoSistemaOS:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+						<div class="card card-w-title">
+							<h1>ChamadoSistemaOSes Cadastrados</h1>
+							<p:messages id="messagesDataTable" showDetail="true"
+								closable="true" />
+							<p:outputPanel id="panelTable">
+								<p:dataTable var="chamadoSistemaOS" filteredValue="#{chamadoSistemaOSController.listaFiltrada}" 
+									value="#{chamadoSistemaOSController.listaChamadoSistemaOSes}" reflow="true"
+									emptyMessage="Nenhum ChamadoSistemaOS Cadastrado" widgetVar="chamadoSistemaOSTable"
+									rowKey="#{chamadoSistemaOS.id}" paginator="true" rows="10">
+									<f:facet name="header">
+							            <p:outputPanel>
+							                <h:outputText value="Pesquisa por todos os campos:" />
+							                <p:inputText id="globalFilter" onkeyup="PF('chamadoSistemaOSTable').filter()" style="width:150px" placeholder="Palavra a pesquisar"/>
+							            </p:outputPanel>
+							        </f:facet>
+									<p:column filterBy="#{chamadoSistemaOS.descricao}" width="20%" headerText="Descrição"
+										sortBy="#{chamadoSistemaOS.descricao}">
+										<h:outputText value="#{chamadoSistemaOS.descricao}" />
+									</p:column>
+
+									<p:column filterBy="#{chamadoSistemaOS.abertura}" width="10%" headerText="Abertura"
+										sortBy="#{chamadoSistemaOS.abertura}">
+										<h:outputText value="#{chamadoSistemaOS.abertura}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+
+									<p:column filterBy="#{chamadoSistemaOS.inicioAtendimento}" width="10%" headerText="Inicio Atendimento"
+										sortBy="#{chamadoSistemaOS.inicioAtendimento}">
+										<h:outputText value="#{chamadoSistemaOS.inicioAtendimento}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									
+									<p:column filterBy="#{chamadoSistemaOS.fimAtendimento}" width="10%" headerText="Fim Atendimento"
+										sortBy="#{chamadoSistemaOS.fimAtendimento}">
+										<h:outputText value="#{chamadoSistemaOS.fimAtendimento}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									
+									<p:column filterBy="#{chamadoSistemaOS.atraso}" width="10%" headerText="Atraso"
+										sortBy="#{chamadoSistemaOS.atraso}">
+										<h:outputText value="#{chamadoSistemaOS.atraso}" />
+									</p:column>
+									
+									<p:column filterBy="#{chamadoSistemaOS.tipoAceite.tipoAceite}" width="10%" headerText="Tipo Aceite"
+										sortBy="#{chamadoSistemaOS.tipoAceite.tipoAceite}">
+										<h:outputText value="#{chamadoSistemaOS.tipoAceite.tipoAceite}" />
+									</p:column>
+									
+									<p:column filterBy="#{chamadoSistemaOS.qtdDiasAtrasoProduto}" width="10%" headerText="Qtd Dias Atraso"
+										sortBy="#{chamadoSistemaOS.tipoAceite.qtdDiasAtrasoProduto}">
+										<h:outputText value="#{chamadoSistemaOS.qtdDiasAtrasoProduto}" />
+									</p:column>
+									
+									<p:column filterBy="#{chamadoSistemaOS.coberturaTesteApurado}" width="10%" headerText="Cobertura Teste Apurado"
+										sortBy="#{chamadoSistemaOS.coberturaTesteApurado}">
+										<h:outputText value="#{chamadoSistemaOS.coberturaTesteApurado}" />
+									</p:column>
+									
+									<p:column filterBy="#{chamadoSistemaOS.status}" width="10%" headerText="Status"
+										sortBy="#{chamadoSistemaOS.status}">
+										<h:outputText value="#{chamadoSistemaOS.status}" />
+									</p:column>
+
+
+
+								</p:dataTable>
+
+							</p:outputPanel>
+
+						</div>
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

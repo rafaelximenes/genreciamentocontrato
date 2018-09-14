@@ -73,6 +73,11 @@
 										headerText="Nome" sortBy="#{sistema.nome}">
 										<h:outputText value="#{sistema.nome}" />
 									</p:column>
+									
+									<p:column filterBy="#{sistema.coberturaTesteApurado}" width="20%"
+										headerText="Nome" sortBy="#{sistema.coberturaTesteApurado}">
+										<h:outputText value="#{sistema.coberturaTesteApurado}%" />
+									</p:column>
 
 									<p:column filterBy="#{sistema.ativoFormatado}" width="20%"
 										headerText="Ativo?" sortBy="#{sistema.ativoFormatado}">
@@ -91,10 +96,59 @@
 											</p:commandButton>
 										</div>
 									</p:column>
+									
+									<p:column width="10%" headerText="Alterar">
+										<div align="center">
+											<p:commandButton process="@this"
+												update=":formCadastroSistema:chamadoAlterarDetail, :formCadastroSistema:panelTableSistema"
+												oncomplete="PF('chamadoAlterarDialog').show()"
+												title="Alterar Sistema" icon="fa fa-flag"
+												style="margin:24px 24px 0 0">
+												<f:setPropertyActionListener value="#{sistema}"
+													target="#{sistemaController.sistemaSelected}" />
+											</p:commandButton>
+										</div>
+									</p:column>
 
 
 								</p:dataTable>
+								
+								
+								
+								
+								
+								<p:dialog width="60%" header="Alterar Sistema"
+									widgetVar="chamadoAlterarDialog" responsive="true" modal="true"
+									showEffect="blind" hideEffect="explode" resizable="false">
+									<p:outputPanel id="chamadoAlterarDetail" style="text-align:center;">
+										<p:messages id="messagesAlterar" showDetail="true"
+										closable="true" />
+										<h:panelGrid columns="2">
 
+
+											<p:outputLabel for="nomeAlterar" value="Nome" />
+											<p:inputText id="nomeAlterar"
+												value="#{sistemaController.sistemaSelected.nome}" />
+											
+											<p:outputLabel for="ativoAlterar" value="Ativo?" />	
+											<p:selectBooleanButton id="ativoAlterar" value="#{sistemaController.sistemaSelected.ativo}" onLabel="Sim" offLabel="Não" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px"/>
+
+
+
+										</h:panelGrid>
+
+										<div align="center">
+											<p:commandButton value="Alterar"
+												action="#{sistemaController.alterar}" 
+												update=":formCadastroSistema:chamadoAlterarDetail, :formCadastroSistema:panelTableSistema"
+												style="width:auto" />
+										</div>
+
+									</p:outputPanel>
+
+
+								</p:dialog>
+								
 								<p:dialog width="60%" header="Tamanho Funcional"
 									widgetVar="chamadoDialog" responsive="true" modal="true"
 									showEffect="blind" hideEffect="explode" resizable="false">

@@ -1,6 +1,7 @@
 package br.gov.cgsus.gerenciamentocontrato.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import br.gov.cgsus.gerenciamentocontrato.domain.Perfil;
 import br.gov.cgsus.gerenciamentocontrato.domain.Usuario;
@@ -29,9 +30,9 @@ public class UsuarioDao extends Dao{
 			fechaConexaoComCommit();
 	}
 	
-	public List<UsuarioContrato> selectByCpfSenha(Usuario usuario) {
+	public Usuario selectByEmailSenha(Usuario usuario) {
 		sqlSession = abreConexao();
-		return sqlSession.selectList(pacote + ".selectByCpfSenha", usuario);
+		return sqlSession.selectOne(pacote + ".selectByEmailSenha", usuario);
 	}
 	
 	public List<Usuario> selectAll() {
@@ -44,6 +45,11 @@ public class UsuarioDao extends Dao{
 		return sqlSession.selectList(pacote + ".selectPerfil");
 	}
 	
+	public List<UsuarioContrato> selectUsuarioContrato(Usuario usuario) {
+		sqlSession = abreConexao();
+		return sqlSession.selectList(pacote + ".selectUsuarioContrato", usuario);
+	}
+	
 	public void vincularUsuarioAoContrato(UsuarioContrato usuarioContrato) {
 		sqlSession = abreConexao();
 		sqlSession.insert(pacote + ".vincularUsuarioAoContrato", usuarioContrato);
@@ -52,5 +58,43 @@ public class UsuarioDao extends Dao{
 		else
 			fechaConexaoComCommit();
 	}
+	
+	public void alteraSenha(Usuario usuario) {
+		sqlSession = abreConexao();
+		sqlSession.update(pacote + ".alteraSenha", usuario);
+		if (teste)
+			fechaConexaoSemCommit();
+		else
+			fechaConexaoComCommit();
+	}
+	
+	public void alteraUsuario(Usuario usuario) {
+		sqlSession = abreConexao();
+		sqlSession.update(pacote + ".alteraUsuario", usuario);
+		if (teste)
+			fechaConexaoSemCommit();
+		else
+			fechaConexaoComCommit();
+	}
+	
+	public boolean selectUsuarioIsAdmin(UsuarioContrato uc) {
+		sqlSession = abreConexao();
+		String retorno = sqlSession.selectOne(pacote + ".selectUsuarioIsAdmin",uc);
+		return retorno==null?false:true;
+	}
+	
+	public boolean selectUsuarioTemPerfil(Map<String, Integer> map) {
+		sqlSession = abreConexao();
+		String retorno = sqlSession.selectOne(pacote + ".selectUsuarioTemPerfil",map);
+		return retorno==null?false:true;
+	}
+	
+	public Integer selectPerfilUsuario(UsuarioContrato uc) {
+		sqlSession = abreConexao();
+		return sqlSession.selectOne(pacote + ".selectPerfilUsuario", uc);
+	}
+	
+	
+	
 	
 }

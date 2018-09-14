@@ -1,0 +1,154 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Sistema(s) da OS</ui:define>
+
+	<ui:define name="viewname">Administração > Cadastrar Sistema(s) da OS</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroSistemaOS">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Cadastrar Sistema(s) da OS</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="os" value="Ordem de Serviço" />
+									<p:selectOneMenu id="os" disabled="#{sistemasOSController.ordemServico!=null}"
+										value="#{sistemasOSController.ordemServico}"
+										converter="ordemServicoConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" /> 
+										<f:selectItems value="#{sistemasOSController.listaOrdemServico}"
+											var="ordemServico" itemLabel="OS: #{ordemServico.numero}/#{ordemServico.ano}  - Contrato: #{ordemServico.contrato.numero} - Fornecedor: #{ordemServico.contrato.fornecedor.nomeFantasia}"
+											itemValue="#{ordemServico}" />
+
+									</p:selectOneMenu>
+									
+									<p:outputLabel for="sistema" value="Sistema" />
+									<p:selectOneMenu id="sistema" 
+										value="#{sistemasOSController.sistemaOS.sistema}"
+										converter="sistemaConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" /> 
+										<f:selectItems value="#{sistemasOSController.listaSistemas}"
+											var="sistema" itemLabel="#{sistema.nome}"
+											itemValue="#{sistema}" /> 
+										<p:ajax event="change" listener="#{sistemasOSController.buscaTamanhoFuncional}" update=":formCadastroSistemaOS:tamanhoPF"/>
+									</p:selectOneMenu>
+									
+									<p:outputLabel for="tamanhoPF" value="Tamanho Ponto de Função" />
+									<p:inputText id="tamanhoPF" disabled="true"
+										value="#{sistemasOSController.sistemaOS.tamanhoPF}" >
+									</p:inputText>
+									
+									<p:outputLabel for="coberturaTeste" value="Cobertura Teste" />
+									<p:inputText id="coberturaTeste" 
+										value="#{sistemasOSController.sistemaOS.coberturaTeste}" >
+									</p:inputText>
+									
+									<p:outputLabel for="tipoDisponibilidade" value="Tipo de Disponibilidade" />
+									<p:selectOneMenu id="tipoDisponibilidade" 
+										value="#{sistemasOSController.sistemaOS.tipoDisponibilidade}"
+										converter="tipoDisponibilidadeConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" /> 
+										<f:selectItems value="#{sistemasOSController.listaTiposDisponibilidades}"
+											var="tipo" itemLabel="#{tipo.nome}"
+											itemValue="#{tipo}" />
+										<p:ajax event="change" listener="#{sistemasOSController.calculaQuantHoraSustentacao}" update=":formCadastroSistemaOS:qtdHoraSustentacao"/>
+
+									</p:selectOneMenu>
+									
+									<p:outputLabel for="qtdHoraSustentacao" value="Quant. Hora Sustentação" />
+									<p:inputText id="qtdHoraSustentacao" disabled="true"
+										value="#{sistemasOSController.sistemaOS.qtdhoraSustentada}" >
+									</p:inputText>
+									
+									<p:outputLabel for="nivelCriticidade" value="Nível de Criticidade" />
+									<p:selectOneMenu id="nivelCriticidade" 
+										value="#{sistemasOSController.sistemaOS.nivelCriticidade}"
+										converter="nivelCriticidadeConverter" lazy="true">
+										<f:selectItem itemLabel="Selecione uma opção" itemValue="" /> 
+										<f:selectItems value="#{sistemasOSController.listaNiveisCriticas}"
+											var="nivel" itemLabel="#{nivel.nome}"
+											itemValue="#{nivel}" />
+										<p:ajax event="change" update=":formCadastroSistemaOS:tempoIndisponibilidade, :formCadastroSistemaOS:fatorCriticidade"/>
+						
+									</p:selectOneMenu>
+									
+									<p:outputLabel for="tempoIndisponibilidade" value="Tempo Máximo Indisponibilidade" />
+									<p:inputText id="tempoIndisponibilidade" disabled="true"
+										value="#{sistemasOSController.sistemaOS.nivelCriticidade.tempoIndisponibilidade}" >
+									</p:inputText>
+									
+									<p:outputLabel for="fatorCriticidade" value="Fator Criticidade" />
+									<p:inputText id="fatorCriticidade" disabled="true"
+										value="#{sistemasOSController.sistemaOS.nivelCriticidade.fatorCriticidade}" >
+									</p:inputText>
+									
+									<p:outputLabel for="percentualDisponibilidade" value="Percentual Disponibilidade" />
+									<p:inputText id="percentualDisponibilidade"
+										value="#{sistemasOSController.sistemaOS.percentualDisponibilidade}" > 
+										<p:ajax event="change" listener="#{sistemasOSController.calculaQuantPFS}" update=":formCadastroSistemaOS:fatorFPS, :formCadastroSistemaOS:qtdFPS , :formCadastroSistemaOS:valorServico"/>
+									</p:inputText>
+									
+									<p:outputLabel for="fatorFPS" value="Fator FPS" />
+									<p:inputText id="fatorFPS" disabled="true"
+										value="#{sistemasOSController.sistemaOS.fatorPFS}" >
+									</p:inputText>
+									
+									<p:outputLabel for="qtdFPS" value="Qtd PFS" />
+									<p:inputText id="qtdFPS" disabled="true"
+										value="#{sistemasOSController.sistemaOS.qtdPFS}" >
+									</p:inputText>
+									
+									<p:outputLabel for="valorUnitPFS" value="Valor Unitário PFS" />
+									<p:inputText id="valorUnitPFS" disabled="true"
+										value="#{sistemasOSController.sistemaOS.valorUnitarioPFS}" >
+									</p:inputText>
+									
+									<p:outputLabel for="valorServico" value="Valor do Serviço" />
+									<p:inputText id="valorServico" disabled="true"
+										value="#{sistemasOSController.valorServico}" >
+									</p:inputText>
+
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Cadastrar" action="#{sistemasOSController.cadastrar}"
+										update=":formCadastroSistemaOS:panelCadastro, :formCadastroSistemaOS:messages"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this" action="#{sistemasOSController.limparDados}"
+										update=":formCadastroSistemaOS:panelCadastro, :formCadastroSistemaOS:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

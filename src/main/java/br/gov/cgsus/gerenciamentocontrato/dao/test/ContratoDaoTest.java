@@ -46,5 +46,18 @@ public class ContratoDaoTest {
 			Assert.assertTrue(false);
 		}
 	}
+	
+	@Test
+	public void selectContratosPorEmail() {
+		
+		try{
+			List<Contrato> list= contratoDao.selectContratosPorEmail("rafaximenes1@gmail.com");
+			Assert.assertTrue(!list.isEmpty());
+		}catch(Exception e) {
+			Assert.assertTrue(false);
+		}
+	}
+	
+	
 
 }

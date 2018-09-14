@@ -32,5 +32,14 @@ public class SistemaDao extends Dao{
 		return sqlSession.selectList(pacote + ".selectAll");
 	}
 	
+	public void alterar(Sistema sistema) {
+		sqlSession = abreConexao();
+		sqlSession.update(pacote + ".alterar", sistema);
+		if (teste)
+			fechaConexaoSemCommit();
+		else
+			fechaConexaoComCommit();
+	}
+	
 
 }

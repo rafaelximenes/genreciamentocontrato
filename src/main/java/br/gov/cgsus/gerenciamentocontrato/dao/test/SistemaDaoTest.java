@@ -39,5 +39,21 @@ public class SistemaDaoTest {
 			Assert.assertTrue(false);
 		}
 	}
+	
+	@Test
+	public void alterar() {
+		
+		Sistema sistema = new Sistema();
+		sistema.setNome("Sistema Teste");
+		sistema.setAtivo(false);
+		sistema.setId(4);
+
+		try{
+			sistemaDao.alterar(sistema);
+			Assert.assertTrue(true);
+		}catch(Exception e) {
+			Assert.assertTrue(false);
+		}
+	}
 
 }

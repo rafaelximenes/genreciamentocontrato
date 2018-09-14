@@ -19,7 +19,6 @@ public class Usuario implements Serializable {
 	
 	private String senha;
 	
-	private Perfil perfil;
 	
 	public Usuario() {
 	}
@@ -28,14 +27,13 @@ public class Usuario implements Serializable {
 		this.id = id;
 	}
 
-	public Usuario(Integer id, String nome, String email, String cpf, String senha, Perfil perfil) {
+	public Usuario(Integer id, String nome, String email, String cpf, String senha) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.cpf = cpf;
 		this.senha = senha;
-		this.perfil = perfil;
 	}
 
 	public Integer getId() {
@@ -78,13 +76,6 @@ public class Usuario implements Serializable {
 		this.senha = senha;
 	}
 
-	public Perfil getPerfil() {
-		return perfil;
-	}
-
-	public void setPerfil(Perfil perfil) {
-		this.perfil = perfil;
-	}
 
 	@Override
 	public int hashCode() {

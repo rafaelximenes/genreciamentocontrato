@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -20,12 +21,14 @@ import javax.servlet.http.HttpServletResponse;
 import br.gov.cgsus.gerenciamentocontrato.domain.Contrato;
 import br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico;
 import br.gov.cgsus.gerenciamentocontrato.domain.TipoOS;
+import br.gov.cgsus.gerenciamentocontrato.domain.Usuario;
 import br.gov.cgsus.gerenciamentocontrato.report.Database;
 import br.gov.cgsus.gerenciamentocontrato.report.AbstractReportBean.ExportOption;
 import br.gov.cgsus.gerenciamentocontrato.service.ContratoBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.OrdemServicoBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.TipoOSBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.VigenciaContratoBusiness;
+import br.gov.cgsus.gerenciamentocontrato.session.UsuarioSessao;
 import br.gov.cgsus.gerenciamentocontrato.utils.ReportConfigUtil;
 import br.gov.cgsus.gerenciamentocontrato.utils.Util;
 import net.sf.jasperreports.engine.JRException;
@@ -52,10 +55,26 @@ public class OrdemServicoController extends Controller {
 	
 	private ExportOption exportOption;
 	
+	@ManagedProperty(value="#{usuarioSessao}")
+	private UsuarioSessao usuarioSessao;
+	
+	public void setUsuarioSessao(UsuarioSessao usuarioSessao) { 
+		this.usuarioSessao = usuarioSessao;
+	}
+	
 	@PostConstruct
 	public void inicializar() {
+		Usuario usuario = usuarioSessao.getUsuario();
+		if(!Util.temPerfilParaAcessar(usuario, usuarioSessao.getContrato(), 3)) {
+			try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect("/public/erro_permissao.jsf");
+			} catch (IOException e) {
+				jsfError(e.getMessage());
+			}
+		}
 		ordemServicoBusiness = new OrdemServicoBusiness();
 		ordemServico = new OrdemServico();
+		ordemServico.setContrato(usuarioSessao.getContrato());
 		pesquisar();
 		pesquisarListaCombos();
 		setExportOption(ExportOption.PDF);
@@ -173,6 +192,10 @@ public class OrdemServicoController extends Controller {
 			jsfError(e.getMessage());
 		}
 		
+	}
+	
+	public boolean isPodeCancelarOS() {
+		return true;
 	}
 	
 	public String chamaPaginaVincularSistemas() {

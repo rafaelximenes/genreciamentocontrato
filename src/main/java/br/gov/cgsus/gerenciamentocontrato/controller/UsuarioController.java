@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 import br.gov.cgsus.gerenciamentocontrato.domain.Contrato;
 import br.gov.cgsus.gerenciamentocontrato.domain.Perfil;
 import br.gov.cgsus.gerenciamentocontrato.domain.Usuario;
+import br.gov.cgsus.gerenciamentocontrato.domain.UsuarioContrato;
 import br.gov.cgsus.gerenciamentocontrato.service.ContratoBusiness;
 import br.gov.cgsus.gerenciamentocontrato.service.UsuarioBusiness;
 
@@ -39,8 +40,16 @@ public class UsuarioController extends Controller {
 	
 	private List<Contrato> listaContratosSelecteds;
 	
+	private List<UsuarioContrato> listaPerfilUsuario;
+	
+	private List<UsuarioContrato> listaFiltradaPerfilUsuario;
+	
+	private UsuarioContrato usuarioContrato;
+	
 	@PostConstruct
 	public void inicializar() {
+		usuarioSelected = new Usuario();
+		usuarioContrato = new UsuarioContrato();
 		usuarioBusiness = new UsuarioBusiness();
 		usuario = new Usuario();
 		perfilString = null;
@@ -49,11 +58,31 @@ public class UsuarioController extends Controller {
 		pesquisarListaCombos();
 	}
 	
+	public void alterarUsuario() {
+		try {
+			usuarioBusiness.alteraUsuario(usuarioSelected);
+			jsfInfo("Usuário alterado com sucesso!");
+			pesquisar();
+		} catch (Exception e) {
+			jsfError(e.getMessage());
+		}
+	}
+	
 	public void teste() {
-		System.out.println(contrato);
+		System.out.println(usuarioContrato.getContrato());
 	}
 	
 	public void vincularPerfilAoContrato() {
+		try {
+			usuarioContrato.setUsuario(usuarioSelected);
+			usuarioBusiness.vincularUsuarioAoContrato(usuarioContrato);
+			pesquisaContratoUsuarioPorUsuario();
+			usuarioContrato.setContrato(null);
+			usuarioContrato.setPerfil(null);
+			perfilString=null;
+		} catch (Exception e) {
+			jsfError(e.getMessage());
+		}
 		
 	}
 	
@@ -77,7 +106,7 @@ public class UsuarioController extends Controller {
 	public void buscaPerfilPorNome() {
 		for(Perfil p: listaPerfil) {
 			if(p.getNome().equalsIgnoreCase(perfilString)) {
-				usuario.setPerfil(p);
+				usuarioContrato.setPerfil(p);
 				break;
 			}
 		}
@@ -95,10 +124,6 @@ public class UsuarioController extends Controller {
 	public void cadastrar() {
 		try {
 			usuarioBusiness.inserir(usuario);
-			/*for(Contrato c: listaContratosSelecteds) {
-				UsuarioContrato uc = new UsuarioContrato(usuario, c);
-				usuarioBusiness.vincularUsuarioAoContrato(uc);
-			}*/
 			jsfInfo("Usuario cadastrado com sucesso!");
 			pesquisar();
 		} catch (Exception e) {
@@ -199,6 +224,40 @@ public class UsuarioController extends Controller {
 
 	public void setUsuarioSelected(Usuario usuarioSelected) {
 		this.usuarioSelected = usuarioSelected;
+		pesquisaContratoUsuarioPorUsuario();
+	}
+
+	private void pesquisaContratoUsuarioPorUsuario() {
+		try {
+			listaPerfilUsuario = usuarioBusiness.selectUsuarioContrato(usuarioSelected);
+		} catch (Exception e) {
+			jsfError(e.getMessage());
+		}
+		
+	}
+
+	public List<UsuarioContrato> getListaPerfilUsuario() {
+		return listaPerfilUsuario;
+	}
+
+	public void setListaPerfilUsuario(List<UsuarioContrato> listaPerfilUsuario) {
+		this.listaPerfilUsuario = listaPerfilUsuario;
+	}
+
+	public List<UsuarioContrato> getListaFiltradaPerfilUsuario() {
+		return listaFiltradaPerfilUsuario;
+	}
+
+	public void setListaFiltradaPerfilUsuario(List<UsuarioContrato> listaFiltradaPerfilUsuario) {
+		this.listaFiltradaPerfilUsuario = listaFiltradaPerfilUsuario;
+	}
+
+	public UsuarioContrato getUsuarioContrato() {
+		return usuarioContrato;
+	}
+
+	public void setUsuarioContrato(UsuarioContrato usuarioContrato) {
+		this.usuarioContrato = usuarioContrato;
 	}
 
 	

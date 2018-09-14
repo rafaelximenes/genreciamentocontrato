@@ -42,5 +42,18 @@ public class ContratoBusiness {
 			throw new Exception("Erro ao buscar no banco de dados.");
 		}
 	}
+	
+	public List<Contrato> selectContratosPorEmail(String email) throws Exception {
+		if(email==null) {
+			throw new Exception("Email é obrigatório.");
+		}
+		try {
+			return contratoDao.selectContratosPorEmail(email);
+		}catch(Exception e) {
+			throw new Exception("Erro ao buscar no banco de dados.");
+		}
+	}
+	
+	
 
 }

@@ -46,7 +46,7 @@
 								<div align="center">
 									<p:commandButton value="Cadastrar"
 										action="#{usuarioController.cadastrar}"
-										update=":formCadastroUsuario:panelCadastro, :formCadastroUsuario:messages, :formCadastroUsuario:panelTable"
+										update=":formCadastroUsuario:panelCadastro, :formCadastroUsuario:messages, :formCadastroUsuario:panelTableUsuario"
 										style="width:auto" />
 									<p:commandButton value="Limpar Dados" process="@this"
 										action="#{usuarioController.limparDados}"
@@ -65,7 +65,7 @@
 							<h1>Usuários Cadastrados</h1>
 							<p:messages id="messagesDataTable" showDetail="true"
 								closable="true" />
-							<p:outputPanel id="panelTable">
+							<p:outputPanel id="panelTableUsuario">
 								<p:dataTable var="usuario" filteredValue="#{usuarioController.listaFiltrada}" 
 									value="#{usuarioController.listaUsuarioes}" reflow="true"
 									emptyMessage="Nenhum Usuario Cadastrado" widgetVar="usuarioTable"
@@ -94,12 +94,25 @@
 									</p:column>
 									
 									
-									<p:column width="10%" headerText="Vincular Perfil ao Contrato">
+									<p:column width="5%" headerText="Vincular Perfil ao Contrato">
 										<div align="center">
 											<p:commandButton process="@this"
-												update=":formCadastroUsuario:chamadoDetail"
+												update=":formCadastroUsuario:chamadoDetail, :formCadastroUsuario:dataTableFuncional"
 												oncomplete="PF('chamadoDialog').show()"
 												title="Vincular Perfil ao Contrato" icon="fa fa-flag"
+												style="margin:24px 24px 0 0">
+												<f:setPropertyActionListener value="#{usuario}"
+													target="#{usuarioController.usuarioSelected}" /> 
+											</p:commandButton>
+										</div>
+									</p:column>
+									
+									<p:column width="5%" headerText="Alterar">
+										<div align="center">
+											<p:commandButton process="@this"
+												update=":formCadastroUsuario:alteraDetail"
+												oncomplete="PF('alteraDialog').show()"
+												title="Alterar Usuário" icon="fa fa-flag"
 												style="margin:24px 24px 0 0">
 												<f:setPropertyActionListener value="#{usuario}"
 													target="#{usuarioController.usuarioSelected}" /> 
@@ -111,7 +124,40 @@
 
 								</p:dataTable>
 								
-								
+								<p:dialog width="60%" header="Alterar Dados do Usuário"
+									widgetVar="alteraDialog" responsive="true" modal="true"
+									showEffect="blind" hideEffect="explode" resizable="false">
+									<p:outputPanel id="alteraDetail" style="text-align:center;">
+										<p:messages id="messagesAltera" showDetail="true"
+										closable="true" />
+										<h:panelGrid columns="2">
+
+
+											<p:outputLabel for="nomeAltera" value="Nome" />
+											<p:inputText id="nomeAltera" 
+												value="#{usuarioController.usuarioSelected.nome}" />
+		
+											<p:outputLabel for="emailAltera" value="E-mail" />
+											<p:inputText id="emailAltera"
+												value="#{usuarioController.usuarioSelected.email}" />
+		
+											<p:outputLabel for="cpfAltera" value="CPF" />
+											<p:inputText id="cpfAltera" 
+												value="#{usuarioController.usuarioSelected.cpf}" />
+														
+										</h:panelGrid>
+
+										<div align="center"> 
+											<p:commandButton value="Alterar" process="nomeAltera, emailAltera, cpfAltera, @this"
+												action="#{usuarioController.alterarUsuario}"
+												update=":formCadastroUsuario:panelTableUsuario, :formCadastroUsuario:messages"
+												style="width:auto" />
+										</div>
+
+									</p:outputPanel>
+
+
+								</p:dialog>
 								
 								
 								
@@ -131,28 +177,31 @@
 													<f:selectItems value="#{usuarioController.listaPerfilString}"  
 														var="perfil" itemLabel="#{perfil}"
 														itemValue="#{perfil}" />
-													<p:ajax event="change" listener="#{usuarioController.buscaPerfilPorNome}"/>
+													<p:ajax event="change" listener="#{usuarioController.buscaPerfilPorNome}"/> 
 												</p:selectOneMenu>
 												
 												<p:outputLabel for="contrato" value="Contrato" />
-											        <p:selectOneMenu id="contrato" value="#{usuarioController.listaContratosSelecteds}" 
-											        	converter="contratoConverter" lazy="true">
-											            <f:selectItem itemLabel="Selecione uma opção" itemValue="" />
-											            <f:selectItems value="#{usuarioController.listaContratos}" 
-														var="contrato" itemLabel="#{contrato.nome}"
-														itemValue="#{contrato}" />
-											        </p:selectManyMenu>
-
+													<p:selectOneMenu id="contrato"
+														value="#{usuarioController.usuarioContrato.contrato}" 
+														converter="contratoConverter" lazy="true">
+														<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+														<f:selectItems value="#{usuarioController.listaContratos}" 
+															var="contrato" itemLabel="#{contrato.nome}"
+															itemValue="#{contrato}" />
+														<p:ajax event="change" listener="#{usuarioController.teste}"/>
+				
+													</p:selectOneMenu>
+												
 										</h:panelGrid>
 
 										<div align="center"> 
-											<p:commandButton value="Vincular"
+											<p:commandButton value="Vincular" process="@this"
 												action="#{usuarioController.vincularPerfilAoContrato}"
-												update=":formCadastroSistema:chamadoDetail, :formCadastroSistema:dataTableFuncional"
+												update=":formCadastroUsuario:chamadoDetail, :formCadastroUsuario:dataTableFuncional"
 												style="width:auto" />
 											<p:commandButton value="Limpar Dados" process="@this"
 												action="#{usuarioController.limparDadosVinculacao}" 
-												update=":formCadastroSistema:chamadoDetail"
+												update=":formCadastroUsuario:chamadoDetail"
 												style="width:auto" />
 										</div>
 
@@ -164,11 +213,11 @@
 											<h1>Lista de Perfis vinculados aos contratos</h1>
 											
 											<p:outputPanel id="panelTable">
-												<p:dataTable var="tamanhoFuncional"
-													filteredValue="#{sistemaController.listaFiltradaTamanhoFuncional}"
-													value="#{sistemaController.listaTamanhoFuncionales}"
+												<p:dataTable var="perfilcontrato"
+													filteredValue="#{usuarioController.listaFiltradaPerfilUsuario}"
+													value="#{usuarioController.listaPerfilUsuario}" 
 													reflow="true"
-													emptyMessage="Nenhum TamanhoFuncional Cadastrado"
+													emptyMessage="Nenhum Perfil Cadastrado"
 													widgetVar="tamanhoFuncionalTable"
 													rowKey="#{tamanhoFuncional.id}" paginator="true" rows="10">
 													<f:facet name="header">
@@ -179,30 +228,17 @@
 																style="width:150px" placeholder="Palavra a pesquisar" />
 														</p:outputPanel>
 													</f:facet>
-													<p:column filterBy="#{tamanhoFuncional.sistema.nome}"
-														width="50%" headerText="Sistema"
-														sortBy="#{tamanhoFuncional.sistema.nome}">
-														<h:outputText value="#{tamanhoFuncional.sistema.nome}" />
+													<p:column filterBy="#{perfilcontrato.contrato.numero}/#{perfilcontrato.contrato.ano}"
+														width="50%" headerText="Contrato"
+														sortBy="#{perfilcontrato.contrato.numero}/#{perfilcontrato.contrato.ano}">
+														<h:outputText value="#{perfilcontrato.contrato.numero}/#{perfilcontrato.contrato.ano}" />
 													</p:column>
 
-													<p:column filterBy="#{tamanhoFuncional.dataVigencia}"
+													<p:column filterBy="#{perfilcontrato.perfil.nome}"
 														width="25%" headerText="Data Vigência"
-														sortBy="#{tamanhoFuncional.dataVigencia}">
-														<div align="center">
-															<h:outputText value="#{tamanhoFuncional.dataVigencia}">
-																<f:convertDateTime pattern="dd/MM/yyyy" />
-															</h:outputText>
-														</div>
-
+														sortBy="#{perfilcontrato.perfil.nome}">
+														<h:outputText value="#{perfilcontrato.perfil.nome}"/>
 													</p:column>
-
-													<p:column filterBy="#{tamanhoFuncional.tamanhoPontoFuncao}"
-														width="25%" headerText="Tamanho Funcional"
-														sortBy="#{tamanhoFuncional.tamanhoPontoFuncao}">
-														<h:outputText
-															value="#{tamanhoFuncional.tamanhoPontoFuncao}" />
-													</p:column>
-
 
 												</p:dataTable>
 
@@ -213,18 +249,6 @@
 
 								</p:dialog>
 								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-
 							</p:outputPanel>
 
 						</div>

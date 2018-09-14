@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.mapper.ChamadoSistemaOSMapper">
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.ChamadoSistemaOS" id="ChamadoSistemaOSResultMap">
+	<id property="id" column="id"/>
+	<result property="sistemaOS.id" column="id_sistema_os"/>
+	<result property="descricao" column="descricao"/>
+	<result property="abertura" column="abertura"/>
+	<result property="inicioAtendimento" column="inicio_atendimento"/>
+	<result property="fimAtendimento" column="fim_atendimento"/>
+	<result property="atraso" column="atraso"/>
+	<result property="tipoAceite.id" column="id_tipo_aceite"/>
+	<result property="qtdDiasAtrasoProduto" column="qtd_dias_atraso_produto"/>
+	<result property="coberturaTesteApurado" column="cobertura_teste_apurado"/>
+	<result property="status" column="status"/>
+</resultMap>
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.TipoAceite" id="TipoAceiteResultMap">
+	<id property="id" column="id"/>
+	<result property="tipoAceite" column="tipo_aceite"/>
+	<result property="peso" column="peso"/>
+</resultMap>
+
+  <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.ChamadoSistemaOS">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
+    	SELECT nextval('seq_chamado_sistemaos')
+  	</selectKey>
+  	insert into chamado_sistema_os
+  	(id,
+  	id_sistema_os,
+  	descricao,
+  	abertura,
+  	inicio_atendimento,
+  	fim_atendimento,
+  	atraso,
+  	id_tipo_aceite,
+  	qtd_dias_atraso_produto,
+  	cobertura_teste_apurado,
+  	status)
+  	values 
+  	(#{id},
+  	 #{sistemaOS.id},
+  	 #{descricao},
+  	 #{abertura},
+  	 #{inicioAtendimento},
+  	 #{fimAtendimento},
+  	 #{atraso},
+  	 #{tipoAceite.id},
+  	 #{qtdDiasAtrasoProduto},
+  	 #{coberturaTesteApurado},
+  	 #{status}
+  	)
+  </insert>
+  
+  <select id="selectAll" resultMap="ChamadoSistemaOSResultMap">
+  	select * from chamado_sistema_os c,sistema_os sos where c.id_sistema_os=sos.id;
+  </select>
+  
+  <select id="selectTipoAceite" resultMap="TipoAceiteResultMap">
+  	select * from tipo_aceite;
+  </select>
+  
+  <select id="selectUltimoChamadoPorSistema" parameterType="java.lang.Integer" resultMap="ChamadoSistemaOSResultMap">
+  	select * from chamado_sistema_os where id_sistema_os=#{id} and abertura >= (select max(abertura) from chamado_sistema_os)
+  </select>
+  
+  
+</mapper>

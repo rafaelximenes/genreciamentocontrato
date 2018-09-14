@@ -67,6 +67,24 @@
  <filter-name>PrimeFaces FileUpload Filter</filter-name>
  <servlet-name>Faces Servlet</servlet-name>
 </filter-mapping>
+
+<filter>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>br.gov.cgsus.gerenciamentocontrato.filter.LoginFilter</filter-class>    
+</filter>
+<filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>/restricted/*</url-pattern>
+</filter-mapping>
+
+ <!--  <filter>
+      <filter-name>LoginFilter</filter-name>
+      <filter-class>br.gov.cgsus.gerenciamentocontrato.filter.PageFilter</filter-class>    
+  </filter>
+  <filter-mapping>
+      <filter-name>LoginFilter</filter-name>
+      <url-pattern>*</url-pattern>
+  </filter-mapping> -->
 	
 	<session-config>
         <session-timeout>

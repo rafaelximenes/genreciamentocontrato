@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Usuário</ui:define>
+
+	<ui:define name="viewname">Meus dados</ui:define>
+
+	<ui:define name="content">
+
+		<h:form id="formCadastroMeusDados">
+
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="card card-w-title">
+							<h1>Editar Dados Pessoais</h1>
+							<p:messages id="messages" showDetail="true" closable="true" />
+							<p:outputPanel id="panelCadastro">
+
+								<p:panelGrid columns="2"
+									columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+									layout="grid" styleClass="ui-panelgrid-blank form-group"
+									style="border:0px none; background-color:transparent;">
+
+									<p:outputLabel for="nome" value="Nome" />
+									<p:inputText id="nome" required="true"
+										value="#{alterarDadosPessoaisController.usuario.nome}" />
+
+									<p:outputLabel for="email" value="E-mail" />
+									<p:inputText id="email" required="true"
+										value="#{alterarDadosPessoaisController.usuario.email}" />
+
+									<p:outputLabel for="cpf" value="CPF" />
+									<p:inputText id="cpf" required="true"
+										value="#{alterarDadosPessoaisController.usuario.cpf}" />
+										
+								</p:panelGrid>
+								<br></br>
+								<div align="center">
+									<p:commandButton value="Alterar"
+										action="#{alterarDadosPessoaisController.alterarUsuario}"
+										update=":formCadastroMeusDados:panelCadastro, :formCadastroMeusDados:messages"
+										style="width:auto" />
+									<p:commandButton value="Limpar Dados" process="@this"
+										action="#{alterarDadosPessoaisController.limparDados}"
+										update=":formCadastroMeusDados:panelCadastro, :formCadastroMeusDados:messages"
+										style="width:auto" />
+								</div>
+							</p:outputPanel>
+
+
+						</div>
+
+
+					</div>
+
+				</div>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

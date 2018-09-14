@@ -1,0 +1,11 @@
+DELETE FROM public.sistema_os;
+DELETE FROM public.ordem_servico;
+DELETE FROM public.usuario_contrato;
+DELETE FROM public.metrica_vigencia;
+DELETE FROM public.vigencia_contrato;
+DELETE FROM public.contrato;
+DELETE FROM public.fornecedor;
+DELETE FROM public.tipo_os;
+DELETE FROM public.metrica;
+DELETE FROM public.tamanho_funcional;
+DELETE FROM public.sistema;

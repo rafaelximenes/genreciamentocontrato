@@ -24,6 +24,14 @@
 	
 </resultMap>
 
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.SistemaOS" id="SistemaResultMap">
+	<id property="id" column="id_sistema_os"/>
+	<id property="ordemServico.id" column="id_os"/>
+	<result property="sistema.id" column="id"/>
+	<result property="sistema.nome" column="nome"/>
+	
+</resultMap>
+
   <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.SistemaOS">
   	<selectKey order="BEFORE" keyProperty="id" resultType="java.lang.Integer">
     	SELECT nextval('seq_sistema_os')
@@ -65,6 +73,12 @@
   
   <select id="selectAll" resultMap="SistemaOSResultMap">
   	select * from sistema_os;
+  </select>
+  
+  <select id="selectSistemasAtivosDasOSAtivas" resultMap="SistemaResultMap">
+  	SELECT so.id id_sistema_os, os.id id_os, s.id, s.nome
+  	FROM public.sistema_os so, sistema s, ordem_servico os where so.id_sistema=s.id and so.id_os=os.id and now() between os.data_inicio_periodo and os.data_fim_periodo and s.ativo;
+
   </select>
   
   

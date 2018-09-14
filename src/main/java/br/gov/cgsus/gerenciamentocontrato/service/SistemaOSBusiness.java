@@ -75,5 +75,13 @@ public class SistemaOSBusiness {
 			throw new Exception("Erro ao buscar no banco de dados.");
 		}
 	}
+	
+	public List<SistemaOS> selectSistemasAtivosDasOSAtivas() throws Exception {
+		try {
+			return sistemaOSDao.selectSistemasAtivosDasOSAtivas();
+		}catch(Exception e) {
+			throw new Exception("Erro ao buscar no banco de dados.");
+		}
+	}
 
 }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>Gerenciamento de Contrato</title>
+    </h:head>
+
+    <h:body styleClass="login-body">
+    <h:form id="formLogin">
+        <div class="login-panel ui-fluid">
+            <div class="ui-g">
+                <div class="ui-g-12 logo-container">
+                    <p:graphicImage name="images/login/login-logo.png" library="poseidon-layout" />
+                </div>
+                <p:messages id="messages" showDetail="true" closable="true" />
+                <div class="ui-g-12">
+                    <p:inputText value="#{loginController.email}" placeholder="E-mail">
+                    	<p:ajax event="change" listener="#{loginController.preencheContratoPorUsuario}" update=":formLogin:contrato"/>
+                    </p:inputText>
+                </div>
+                <div class="ui-g-12">
+                    <p:password placeholder="Senha" value="#{loginController.senha}" feedback="false"/>
+                </div>
+                <div class="ui-g-12">
+                    <p:outputLabel value="Contrato"/>
+					<p:selectOneMenu id="contrato"
+						value="#{loginController.contrato}"
+						converter="contratoConverter" lazy="true">
+						<f:selectItems value="#{loginController.listaContrato}" 
+							var="contrato" itemLabel="#{contrato.nome}"
+							itemValue="#{contrato}" />
+					</p:selectOneMenu>
+				</div>
+                
+                
+                <div class="ui-g-12 chkbox-container">
+                    <p:selectBooleanCheckbox id="remember-me" />
+                    <p:outputLabel for="remember-me" value="Lembrar Senha"/>
+                    <br/>
+                </div>
+                
+                <div class="ui-g-12 button-container">
+                	<p:commandButton value="Entrar" action="#{loginController.entrar}" icon="fa fa-user" styleClass="turquoise-btn" update=":formLogin"/>
+                    <p:button outcome="/poseidon/esqueceuSenha" value="Esqueceu a Senha?" icon="fa fa-key" styleClass="blue-btn" />
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="poseidon-layout" />
+        
+        
+        <p:ajaxStatus onstart="PF('statusDialogAjax').show()" onsuccess="PF('statusDialogAjax').hide()" />
+ 
+		<p:dialog widgetVar="statusDialogAjax" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+		    <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+		</p:dialog>
+        
+        </h:form>
+    </h:body>
+
+</html>

@@ -11,8 +11,6 @@
 	<result property="contrato.numero" column="numero_contrato"/>
 	<result property="contrato.ano" column="ano_contrato"/>
 	
-	<result property="usuario.perfil.id" column="id_perfil"/>
-	
 </resultMap>
 
 <resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.Usuario" id="UsuarioMap">
@@ -20,11 +18,25 @@
 	<result property="nome" column="nome"/>
 	<result property="email" column="email"/>
 	<result property="cpf" column="cpf"/>
+	<result property="senha" column="senha"/>
 </resultMap>
 
 <resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.Perfil" id="PerfilResultMap">
 	<id property="id" column="id"/>
 	<result property="nome" column="nome"/>
+</resultMap>
+
+<resultMap type="br.gov.cgsus.gerenciamentocontrato.domain.UsuarioContrato" id="UsuarioContratoResultMap">
+	<result property="usuario.id" column="id"/>
+	<result property="usuario.nome" column="nome_usuario"/>
+	
+	<result property="contrato.id" column="id_contrato"/>
+	<result property="contrato.numero" column="numero"/>
+	<result property="contrato.ano" column="ano"/>
+	
+	<result property="perfil.id" column="id_perfil"/>
+	<result property="perfil.nome" column="nome_perfil"/>
+	
 </resultMap>
 
   <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario">
@@ -34,22 +46,24 @@
   	insert into usuario
   	(id,
   	nome,
-  	id_perfil,
   	email,
   	cpf,
   	senha)
   	values 
   	(#{id},
   	 #{nome},
-  	 #{perfil.id},
   	 #{email},
   	 #{cpf},
   	 #{senha}
   	)
   </insert>
   
-  <select id="selectByCpfSenha" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario" resultMap="UsuarioResultMap">
-  	select u.nome as nome_usuario, c.id as id_contrato, c.numero as numero_contrato, c.ano as ano_contrato, p.id as id_perfil from usuario u, usuario_contrato uc, contrato c, perfil p where u.cpf=#{cpf} and senha=#{senha} and uc.id_usuario = u.id and uc.id_contrato=c.id and u.id_perfil=p.id;
+  <select id="selectByEmailSenha" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario" resultMap="UsuarioMap">
+  	select u.* from usuario u where u.email=#{email} and senha=#{senha};
+  </select>
+  
+  <select id="selectUsuarioContratobkp" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario" resultMap="UsuarioResultMap">
+  	select u.* from usuario u, usuario_contrato uc, contrato c where u.email=#{email} and senha=#{senha} and uc.id_usuario = u.id and uc.id_contrato=c.id ;
   </select>
   
   <select id="selectAll" resultMap="UsuarioMap">
@@ -64,12 +78,39 @@
   	
   	insert into usuario_contrato
   	(id_usuario,
-  	id_contrato)
+  	id_contrato,
+  	id_perfil)
   	values 
   	(#{usuario.id},
-  	 #{contrato.id}
+  	 #{contrato.id},
+  	 #{perfil.id}
   	)
   </insert>
+  
+  <select id="selectUsuarioContrato" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario" resultMap="UsuarioContratoResultMap">
+  	SELECT u.id, u.nome as nome_usuario, c.id as id_contrato, c.numero, c.ano, p.id as id_perfil ,p.nome as nome_perfil
+  	FROM public.usuario_contrato uc, usuario u, contrato c, perfil p where uc.id_usuario=u.id and uc.id_contrato=c.id and uc.id_perfil=p.id and u.id=#{id};
+  </select>
+  
+  <update id="alteraSenha" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario">
+  	update usuario set senha=#{senha} where id=#{id};
+  </update>
+  
+  <update id="alteraUsuario" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.Usuario">
+  	update usuario set nome=#{nome},cpf=#{cpf}, email=#{email} where id=#{id};
+  </update>
+  
+  <select id="selectUsuarioIsAdmin" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.UsuarioContrato" resultType="java.lang.String">
+  	select 1 from public.usuario_contrato uc where id_perfil=1 and id_contrato=#{contrato.id} and id_usuario=#{usuario.id}
+  </select>
+  
+  <select id="selectUsuarioTemPerfil" parameterType="java.util.Map" resultType="java.lang.String">
+  	select 1 from public.usuario_contrato uc, public.usuario_funcionalidade uf where uc.id_contrato=#{id_contrato} and id_usuario=#{id_usuario}  and id_funcionalidade=#{id_funcionalidade} and uc.id_perfil=uf.id_perfil;
+  </select>
+  
+  <select id="selectPerfilUsuario" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.UsuarioContrato" resultType="java.lang.Integer">
+  	select id_perfil from usuario_contrato where id_usuario=#{usuario.id} and id_contrato=#{contrato.id};
+  </select>
   
   
 </mapper>

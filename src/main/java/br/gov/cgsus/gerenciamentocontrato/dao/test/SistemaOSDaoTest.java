@@ -54,5 +54,16 @@ public class SistemaOSDaoTest {
 			Assert.assertTrue(false);
 		}
 	}
+	
+	@Test
+	public void selectSistemasAtivosDasOSAtivas() {
+		
+		try{
+			List<SistemaOS> list= sistemaOSDao.selectSistemasAtivosDasOSAtivas();
+			Assert.assertTrue(!list.isEmpty());
+		}catch(Exception e) {
+			Assert.assertTrue(false);
+		}
+	}
 
 }

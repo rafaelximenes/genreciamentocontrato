@@ -35,6 +35,13 @@
 	<result property="contrato.ano" column="ano_contrato"/>
 	<result property="contrato.fornecedor.nomeFantasia" column="nome_fantasia"/>
 	
+	<result property="tipoOS.id" column="id_tipo"/>
+	<result property="tipoOS.nome" column="nome_tipo_os"/>
+	<result property="tipoOS.flagSustentacao" column="flag_sustentacao"/>
+	<result property="vigenciaContrato.id" column="id_vigencia"/>
+	<result property="vigenciaContrato.inicioVigencia" column="inicio_vigencia"/>
+	<result property="vigenciaContrato.terminoVigencia" column="termino_vigencia"/>
+	
 </resultMap>
 
   <insert id="inserir" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico">
@@ -69,8 +76,8 @@
   </insert>
   
   <select id="selectAll" resultMap="OrdemServicoContratoResultMap">
-  	SELECT os.*, c.numero as numero_contrato, c.ano as ano_contrato, f.nome_fantasia
-  FROM public.ordem_servico os, contrato c, fornecedor f where os.id_contrato=c.id and c.id_fornecedor=f.id;
+  	SELECT os.*, c.numero as numero_contrato, c.ano as ano_contrato, f.nome_fantasia, tos.id as id_tipo, tos.nome as nome_tipo_os, tos.flag_sustentacao, v.id as id_vigencia, v.inicio_vigencia, v.termino_vigencia
+  FROM public.ordem_servico os, contrato c, fornecedor f, tipo_os tos, vigencia_contrato v where os.id_contrato=c.id and c.id_fornecedor=f.id and id_tipo_os = tos.id and id_vigencia_contrato=v.id;
   </select>
   
   <select id="selectUltimoNumeroPorAno" parameterType="br.gov.cgsus.gerenciamentocontrato.domain.OrdemServico" resultType="java.lang.Integer">

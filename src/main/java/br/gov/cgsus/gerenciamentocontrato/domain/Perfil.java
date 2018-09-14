@@ -13,6 +13,10 @@ public class Perfil implements Serializable {
 	
 	private String nome;
 	
+	public Perfil(Integer id) {
+		this.id = id;
+	}
+	
 	public Perfil(Integer id, String nome) {
 		super();
 		this.id = id;

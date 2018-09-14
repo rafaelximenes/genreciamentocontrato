@@ -32,5 +32,9 @@ public class SistemaOSDao extends Dao{
 		return sqlSession.selectList(pacote + ".selectAll");
 	}
 	
-
+	public List<SistemaOS> selectSistemasAtivosDasOSAtivas() {
+		sqlSession = abreConexao();
+		return sqlSession.selectList(pacote + ".selectSistemasAtivosDasOSAtivas");
+	}
+	
 }

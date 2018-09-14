@@ -28,7 +28,7 @@
 									<p:outputLabel for="contrato" value="Contrato" />
 									<p:selectOneMenu id="contrato"
 										value="#{ordemServicoController.ordemServico.contrato}"
-										converter="contratoConverter" lazy="true">
+										converter="contratoConverter" lazy="true" disabled="true">
 										<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
 										<f:selectItems value="#{ordemServicoController.listaContratos}" 
 											var="contrato" itemLabel="#{contrato.nome}"
@@ -121,51 +121,53 @@
 							                <p:inputText id="globalFilter" onkeyup="PF('ordemServicoTable').filter()" style="width:150px" placeholder="Palavra a pesquisar"/>
 							            </p:outputPanel>
 							        </f:facet>
-									<p:column filterBy="#{ordemServico.numero}" width="10%" headerText="Número OS"
-										sortBy="#{ordemServico.numero}">
-										<h:outputText value="#{ordemServico.numero}" />
-									</p:column>
-
-									<p:column filterBy="#{ordemServico.ano}" width="5%" headerText="Ano"
-										sortBy="#{ordemServico.ano}">
-										<h:outputText value="#{ordemServico.ano}" />
-									</p:column>
-
-									<p:column filterBy="#{ordemServico.dataAbertura}" width="15%" headerText="Data de Abertura"
-										sortBy="#{ordemServico.dataAbertura}">
-										<div align="center">
-											<h:outputText value="#{ordemServico.dataAbertura}" >
-												<f:convertDateTime pattern="dd/MM/yyyy" />
-											</h:outputText>
-										</div>
+									<p:column filterBy="#{ordemServico.numero}/#{ordemServico.ano}"  headerText="Número OS"
+										sortBy="#{ordemServico.numero}/#{ordemServico.ano}">
+										<h:outputText value="#{ordemServico.numero}/#{ordemServico.ano}" />
 									</p:column>
 									
-									<p:column filterBy="#{ordemServico.dataInicioPeriodo}" width="15%" headerText="Data Início Período"
-										sortBy="#{ordemServico.dataInicioPeriodo}">
-										<div align="center">
-											<h:outputText value="#{ordemServico.dataInicioPeriodo}" >
-												<f:convertDateTime pattern="dd/MM/yyyy" />
-											</h:outputText>
-										</div>
+									<p:column filterBy="#{ordemServico.contrato.numero}/#{ordemServico.contrato.ano}" headerText="Contrato"
+										sortBy="#{ordemServico.contrato.numero}/#{ordemServico.contrato.ano}">
+										<h:outputText value="#{ordemServico.contrato.numero}/#{ordemServico.contrato.ano}" />
 									</p:column>
 									
-									<p:column filterBy="#{ordemServico.dataFimPeriodo}" width="15%" headerText="Data Fim Período"
-										sortBy="#{ordemServico.dataFimPeriodo}">
-										<div align="center">
-											<h:outputText value="#{ordemServico.dataFimPeriodo}" >
-												<f:convertDateTime pattern="dd/MM/yyyy" />
-											</h:outputText>
-										</div>
-									</p:column>
-									
-									<p:column filterBy="#{ordemServico.contrato.numero}" width="10%" headerText="Contrato"
-										sortBy="#{ordemServico.contrato.numero}">
-										<h:outputText value="#{ordemServico.contrato.numero}" />
-									</p:column>
-									
-									<p:column filterBy="#{ordemServico.contrato.fornecedor.nomeFantasia}" width="25%" headerText="Fornecedor"
+									<p:column filterBy="#{ordemServico.contrato.fornecedor.nomeFantasia}" headerText="Fornecedor"
 										sortBy="#{ordemServico.contrato.fornecedor.nomeFantasia}">
 										<h:outputText value="#{ordemServico.contrato.fornecedor.nomeFantasia}" />
+									</p:column>
+									
+									<p:column filterBy="#{ordemServico.tipoOS.nome}" headerText="Tipo Serviço"
+										sortBy="#{ordemServico.tipoOS.nome}">
+										<h:outputText value="#{ordemServico.tipoOS.nome}" />
+									</p:column>
+									
+									<p:column filterBy="#{ordemServico.dataAbertura}" headerText="Data Abertura"
+										sortBy="#{ordemServico.dataAbertura}">
+										<h:outputText value="#{ordemServico.dataAbertura}" >
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									
+									<p:column filterBy="#{ordemServico.dataInicioPeriodo} a #{ordemServico.dataFimPeriodo}" headerText="Período Execução"
+										sortBy="#{ordemServico.dataInicioPeriodo} a #{ordemServico.dataFimPeriodo}">
+										<h:outputText value="#{ordemServico.dataInicioPeriodo}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+										<h:outputText value=" a "/>
+										<h:outputText value="#{ordemServico.dataFimPeriodo}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</p:column>
+									
+									<p:column filterBy="#{ordemServico.vigenciaContrato.inicioVigencia}" headerText="Vigência Contrato"
+										sortBy="#{ordemServico.vigenciaContrato.inicioVigencia}">
+										<h:outputText value="#{ordemServico.vigenciaContrato.inicioVigencia}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+										<h:outputText value=" a "/>
+										<h:outputText value="#{ordemServico.vigenciaContrato.terminoVigencia}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
 									</p:column>
 									
 									<p:column width="5%" headerText="Vincular Sistema(s)">
@@ -179,12 +181,34 @@
 			                            </div>
 		                            </p:column>
 		                            
+		                            <p:column width="5%" headerText="Alterar OS">
+			                            <div align="center"> 
+			                            	<p:outputPanel>
+				                            	<p:commandButton process="@this"
+				                            		title="Vincular" icon="fa fa-flag" style="margin:24px 24px 0 0">
+				                            		<f:setPropertyActionListener value="#{ordemServico}" target="#{ordemServicoController.ordemServicoSelected}" />
+				                                </p:commandButton>
+			                                </p:outputPanel>
+			                            </div>
+		                            </p:column>
+		                            
 		                            <p:column width="5%" headerText="Gerar Relatório">
 			                            <div align="center"> 
 			                            	<p:outputPanel>
 			                            		<h:commandButton process="@this"  action="#{ordemServicoController.criaRelatorio}" value="Relatório" >
 			                            			<f:setPropertyActionListener value="#{ordemServico}" target="#{ordemServicoController.ordemServicoSelected}" />
 			                            		</h:commandButton>
+			                                </p:outputPanel>
+			                            </div>
+		                            </p:column>
+		                            
+		                            <p:column width="5%" headerText="Cancelar OS">
+			                            <div align="center"> 
+			                            	<p:outputPanel>
+				                            	<p:commandButton process="@this"
+				                            		title="Vincular" icon="fa fa-flag" style="margin:24px 24px 0 0">
+				                            		<f:setPropertyActionListener value="#{ordemServico}" target="#{ordemServicoController.ordemServicoSelected}" />
+				                                </p:commandButton>
 			                                </p:outputPanel>
 			                            </div>
 		                            </p:column>
