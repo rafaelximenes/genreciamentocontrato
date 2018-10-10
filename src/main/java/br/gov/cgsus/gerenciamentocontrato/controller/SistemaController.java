@@ -65,6 +65,7 @@ public class SistemaController extends Controller {
 		tamanhoFuncional = new TamanhoFuncional();
 		sistemaBusiness = new SistemaBusiness();
 		sistema = new Sistema();
+		sistemaSelected = new Sistema();
 		pesquisar();
 		populaCombo();
 	}
